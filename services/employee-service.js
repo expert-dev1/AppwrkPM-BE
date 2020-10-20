@@ -12,7 +12,8 @@ class EmployeeService {
         var orgId = req.body.orgId;
         var sortField = req.body.sortField;
         var sortDirection = req.body.sortDirection;
-        return Employee.findAndCountAll({
+        var employeeList = {};
+        await Employee.findAndCountAll({
             limit: limit,
             offset: offset,
             where: { organizationId: orgId },
@@ -24,18 +25,16 @@ class EmployeeService {
             }]
         }).then(data => {
             const totalPages = Math.ceil(data.count / limit);
-            const response = {
-                content: {
-                    "totalItems": data.count,
-                    "totalPages": totalPages,
-                    "limit": limit,
-                    "currentPageNumber": offset,
-                    "currentPageSize": data.length,
-                    "employee": data
-                }
+            employeeList = {
+                "content": data.rows,
+                "totalItems": data.count,
+                "totalPages": totalPages,
+                "limit": limit,
+                "currentPageNumber": offset,
+                "currentPageSize": data.length,
             }
-            res.status(200).send(response);
         });
+        return employeeList;
     }
 
     static async saveEmployee(req) {
@@ -86,7 +85,8 @@ class EmployeeService {
     }
 
     static async getEmployeeDetailsId(req, res) {
-        return Employee.findByPk(req.query.employeeId).then(employee => res.send(employee));
+        var employee = await Employee.findByPk(req.query.employeeId).then(data => employee = data);
+        return employee;
     }
 
     static async checkEmailIdOfEmployee(req) {

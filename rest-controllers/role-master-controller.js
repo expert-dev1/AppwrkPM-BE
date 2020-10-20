@@ -58,7 +58,7 @@ class RoleMasterController {
 
     static async getRoleMasterListByOrgId(req, res) {
         RoleMasterService.getRoleMasterListByOrgId(req, res).then(response => {
-            const data = { "roleMaster": response }
+            const data = { "roleMasterList": response }
             RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
         }).catch(error => {
             const err = { "error": error }

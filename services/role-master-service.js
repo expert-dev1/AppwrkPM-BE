@@ -50,28 +50,24 @@ class RoleMasterService {
     }
 
     static async getRoleMasterDeatilsById(req, res) {
-        return RoleMaster.findByPk(req.query.roleMasterId).then(roleMaster => res.send(roleMaster));
+        var roleMaster = await RoleMaster.findByPk(req.query.roleMasterId).then(data => roleMaster = data);
+        return roleMaster;
     }
 
     static async deleteRoleMasterById(req, res) {
-        return RoleMaster.destroy({
+        var roleMaster = await RoleMaster.destroy({
             where: {
                 id: req.query.roleMasterId
             }
-        }).then(data => res.status(200).send((data).toString())).catch(err => { throw new Error(err) });
+        }).then(data => roleMaster = data).catch(err => { throw new Error(err) });
+        return roleMaster;
     }
 
-    static async getRoleMasterListByOrgId(req, res) {
-        return RoleMaster.findAndCountAll({
+    static async getRoleMasterListByOrgId(req) {
+        var roleMasterList = await RoleMaster.findAndCountAll({
             where: { organizationId: req.query.orgId },
-        }).then(data => {
-            const response = {
-                content: {
-                    "roles": data.rows
-                }
-            }
-            res.status(200).send(response);
-        });
+        }).then(data => roleMasterList = data.rows);
+        return roleMasterList;
     }
 }
 

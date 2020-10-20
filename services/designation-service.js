@@ -79,11 +79,12 @@ class DesignationService {
     }
 
     static async deleteDesignationById(req, res) {
-        return Designation.destroy({
+        var deletedDesignation = await Designation.destroy({
             where: {
                 id: req.query.designationId
             }
-        }).then(data => res.status(200).send((data).toString())).catch(err => { throw new Error(err) });
+        }).then(data => deletedDesignation = data).catch(err => { throw new Error(err) });
+        return deletedDesignation;
     }
 }
 

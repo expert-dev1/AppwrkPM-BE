@@ -1,20 +1,36 @@
 const SeedDataService = require('../services/seed-data-service');
+const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUtils');
 
 class SeedDataController {
 
     static async getAllCountryList(req, res) {
-        var data = await SeedDataService.getAllCountryList(req, res);
-        res.send(data);
+        SeedDataService.getAllCountryList(req, res).then(response => {
+            const data = { "countryList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
     }
 
     static async getAllStateListByCountryId(req, res) {
-        var data = await SeedDataService.getAllStateListByCountryId(req, res);
-        res.send(data);
+        SeedDataService.getAllStateListByCountryId(req, res).then(response => {
+            const data = { "stateList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
     }
 
     static async getAllCityListByStateId(req, res) {
-        var data = await SeedDataService.getAllCityListByStateId(req, res);
-        res.send(data);
+        SeedDataService.getAllCityListByStateId(req, res).then(response => {
+            const data = { "cityList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
     }
 }
 

@@ -1,42 +1,55 @@
 const EmployeeService = require('../services/employee-service')
-
+const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUtils');
 class EmployeeController {
 
     static async getEmployeeListByOrgIdWithPage(req, res) {
-        // var data = { "id": 1, "name": "Amit Malik", "age": 26 };
-        var data = await EmployeeService.getEmployeeListByOrgIdWithPage(req, res);
-        res.send(data);
+        EmployeeService.getEmployeeListByOrgIdWithPage(req, res).then(response => {
+            const data = { "employeeList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
     }
 
     static async saveEmployee(req, res) {
-        // var data = { "id": 1, "name": "Amit Malik", "age": 26 };
-        EmployeeService.saveEmployee(req, res).then(data => {
-            res.send(data);
+        EmployeeService.saveEmployee(req, res).then(response => {
+            const data = { "employee": response }
+            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.createdSuccessResponse(err, res);
         });
     }
 
     static async updateEmployee(req, res) {
-        // var data = { "id": 1, "name": "Amit Malik", "age": 26 };
-        EmployeeService.updateEmployee(req, res).then(data => {
-            res.send(data);
-        }); 
+        EmployeeService.updateEmployee(req, res).then(response => {
+            const data = { "employee": response }
+            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.createdSuccessResponse(err, res);
+        });
     }
 
     static async getEmployeeDetailsId(req, res) {
-        var data = await EmployeeService.getEmployeeDetailsId(req, res);
-        res.send(data);
+        EmployeeService.getEmployeeDetailsId(req, res).then(response => {
+            const data = { "employee": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
     }
 
     static async checkEmailIdOfEmployee(req, res) {
-        var data = await EmployeeService.checkEmailIdOfEmployee(req, res);
-        var response = {
-            message: "Record Successfully fetched",
-            status: 200,
-            data: {
-                employee: data
-            }
-        }
-        res.send(response);
+        EmployeeService.checkEmailIdOfEmployee(req, res).then(response => {
+            const data = { "employee": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
     }
 }
 

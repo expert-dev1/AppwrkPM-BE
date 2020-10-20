@@ -7,21 +7,18 @@ var City = require('../models/seed-data/City');
 class SeedDataService {
 
     static async getAllCountryList(req, res) {
-        return Country.findAndCountAll().then(data => {            
-            res.status(200).send(data.rows);
-        }).catch(err => { console.log('err : ', err) });
+        var countryList = await Country.findAndCountAll().then(data => countryList = data.rows).catch(err => { console.log('err : ', err) });
+        return countryList;
     }
 
     static async getAllStateListByCountryId(req, res) {
-        return State.findAndCountAll({where : {country: req.query.countryId}}).then(data => {            
-            res.status(200).send(data.rows);
-        }).catch(err => { console.log('err : ', err) });
+        var stateList = await State.findAndCountAll({where : {country: req.query.countryId}}).then(data => stateList = data.rows).catch(err => { console.log('err : ', err) });
+        return stateList;
     }
 
     static async getAllCityListByStateId(req, res) {
-        return City.findAndCountAll({where : {state: req.query.stateId}}).then(data => {            
-            res.status(200).send(data.rows);
-        }).catch(err => { console.log('err : ', err) });
+        var cityList = await City.findAndCountAll({where : {state: req.query.stateId}}).then(data => cityList = data.rows).catch(err => { console.log('err : ', err) });
+        return cityList;
     }
 
 }
