@@ -1,6 +1,6 @@
 // const { where } = require('sequelize/types');
 var Employee = require('../models/employee/Employee');
-var Designation = require('../models/designation/Designation');
+const Designation = require('../models/designation/Designation');
 const Organization = require('../models/organization/Organization');
 var RoleMaster = require('../models/role-master/RoleMaster');
 // const sequelize = require('../config/sequelize-db');
@@ -17,12 +17,13 @@ class EmployeeService {
             limit: limit,
             offset: offset,
             where: { organizationId: orgId },
+            include: [{
+                model: Designation,
+                as: 'designation'
+            }],
             order: [
                 [sortField, sortDirection],
             ], // conditions
-            include: [{
-                model: Organization,
-            }]
         }).then(data => {
             const totalPages = Math.ceil(data.count / limit);
             employeeList = {
@@ -52,6 +53,7 @@ class EmployeeService {
             addressLine2: req.body.addressLine2 && req.body.addressLine2 != undefined && req.body.addressLine2 != null ? req.body.addressLine2 : null,
             roleMaster: req.body.roleMaster,
             organizationId: req.body.organizationId,
+            designationId: req.body.organizationId,
             country: req.body.country,
             state: req.body.state,
             city: req.body.city,
@@ -74,6 +76,7 @@ class EmployeeService {
             addressLine2: req.body.addressLine2,
             roleMaster: req.body.roleMaster,
             organizationId: req.body.organizationId,
+            designationId: req.body.organizationId,
             country: req.body.country,
             state: req.body.state,
             city: req.body.city,

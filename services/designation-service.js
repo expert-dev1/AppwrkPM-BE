@@ -86,6 +86,15 @@ class DesignationService {
         }).then(data => deletedDesignation = data).catch(err => { throw new Error(err) });
         return deletedDesignation;
     }
+
+    static async getDesignationListByOrgId(req, res) {
+        var desinationList = {};
+        await Designation.findAndCountAll({where: { organizationId: req.query.orgId },
+        }).then(data => {
+            desinationList =  data.rows
+        });
+        return desinationList;
+    }
 }
 
 module.exports = DesignationService;

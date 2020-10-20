@@ -12,4 +12,6 @@ router.get('/', DesignationController.getDesignationDetailsById);
 
 router.delete('/', DesignationController.deleteDesignationById);
 
+router.get('/getDesignationListByOrgId', DesignationController.getDesignationListByOrgId);
+
 module.exports = router;

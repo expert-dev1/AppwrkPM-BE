@@ -6,7 +6,7 @@ const Organization = require('../organization/Organization');
 const Country = require('../seed-data/Country');
 const State = require('../seed-data/State');
 const City = require('../seed-data/City');
-const RoleMaster = require('../role-master/RoleMaster');
+const Designation = require('../designation/Designation');
 
 const Employee = sequelize.define('employee', {
     id:{ 
@@ -26,22 +26,6 @@ const Employee = sequelize.define('employee', {
     dateOfJoining: { type: Sequelize.DATE, allowNull:false },
     addressLine1: { type: Sequelize.STRING(200), allowNull:false },
     addressLine2: { type: Sequelize.STRING(200) },
-    roleMaster: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-        references: {
-            model: RoleMaster,
-            key: 'id'
-        }
-    },
-    // organization: {
-    //     type: Sequelize.INTEGER,
-    //     allowNull:false,
-    //     references: {
-    //         model: Organization,
-    //         key: 'id'
-    //     }
-    // },
     country: {
         type: Sequelize.INTEGER,
         allowNull:false,
@@ -73,5 +57,6 @@ const Employee = sequelize.define('employee', {
 
 // Employee.hasOne(Organization, { foreignKey: 'organizations' });
 Employee.belongsTo(Organization);
+Employee.belongsTo(Designation);
 
 module.exports = Employee;

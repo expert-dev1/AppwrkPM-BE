@@ -55,6 +55,16 @@ class DesignationController {
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
         });
     }
+
+    static async getDesignationListByOrgId(req, res) {
+        DesignationService.getDesignationListByOrgId(req, res).then(response => {
+            const data = { "designationList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
+    }
 }
 
 module.exports = DesignationController;
