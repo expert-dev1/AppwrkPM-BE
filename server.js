@@ -23,15 +23,16 @@ const sequelize = require('./config/sequelize-db');
 // Sync all models that are not 
 // already in the database 
 // sequelize.sync();
-PlatformType.sync();
-RoleEmployee.sync();
+//  PlatformType.sync();
+//  RoleEmployee.sync();
 sequelize.sync().then(result => {
+    // console.log(result)
     // console.log(result);
     app.listen(PORT, function() {
         console.log("Server is running on Port: " + PORT);
     });
 }).catch(err => {
-    console.log(err);
+    // console.log(err);
 });
 
   

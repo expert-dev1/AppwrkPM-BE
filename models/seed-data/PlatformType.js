@@ -14,6 +14,5 @@ const PlatformType = sequelize.define('platform_type', {
     updatedAt: Sequelize.DATE,
 });
 
-PlatformType.sync({force: true});
 
 module.exports = PlatformType;
