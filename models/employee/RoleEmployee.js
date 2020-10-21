@@ -1,12 +1,12 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./config/sequelize-db');
+
 // const { DataTypes } = require("sequelize/types");
 const sequelize = require("../../config/sequelize-db");
 const Organization = require('../organization/Organization');
-const RoleMaster = require('../role-master/RoleMaster');
 const Employee = require('../employee/Employee');
+const RoleMaster = require('../role-master/RoleMaster');
 
-const EmployeeRolesMapping = sequelize.define('employee_roles_mappings', {
+const RoleEmployee = sequelize.define('role_employee', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -16,9 +16,9 @@ const EmployeeRolesMapping = sequelize.define('employee_roles_mappings', {
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
 });
+// Employee.belongsTo(Organization);
+RoleEmployee.belongsTo(Organization);
+RoleEmployee.belongsTo(Employee);
+RoleEmployee.belongsTo(RoleMaster);
 
-EmployeeRolesMapping.belongsTo(Organization);
-EmployeeRolesMapping.belongsTo(Employee);
-EmployeeRolesMapping.belongsTo(RoleMaster);
-// sequelize.sync();
-module.exports = EmployeeRolesMapping;
+module.exports = RoleEmployee;

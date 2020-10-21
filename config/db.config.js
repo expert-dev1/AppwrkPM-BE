@@ -22,7 +22,7 @@ module.exports = {
     PORT: "3306",
     USER: "root",
     PASSWORD: "admin@123",
-    DB: "appwrk_project_management",
+    DB: "project_management",
     dialect: "mysql",
     pool: {
       max: 5,

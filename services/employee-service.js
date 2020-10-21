@@ -1,8 +1,7 @@
 // const { where } = require('sequelize/types');
 var Employee = require('../models/employee/Employee');
 const Designation = require('../models/designation/Designation');
-const Organization = require('../models/organization/Organization');
-var RoleMaster = require('../models/role-master/RoleMaster');
+const RoleEmployee = require('../models/employee/RoleEmployee');
 // const sequelize = require('../config/sequelize-db');
 class EmployeeService {
 
@@ -39,7 +38,6 @@ class EmployeeService {
     }
 
     static async saveEmployee(req) {
-        var newEmployee = null;
         var employee = {
             empCode: await this.getEmployeeCode(req.body.organizationId),
             firstName: req.body.firstName,
@@ -59,8 +57,10 @@ class EmployeeService {
             city: req.body.city,
             pincode: req.body.pincode,
         };
-        return Employee.create(employee).then(newEmployee);
 
+        var newEmployee = await Employee.create(employee).then(data => newEmployee = data);
+        this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, req.body.organizationId);
+        return newEmployee;
     }
 
     static async updateEmployee(req) {
@@ -74,7 +74,6 @@ class EmployeeService {
             dateOfJoining: req.body.dateOfJoining,
             addressLine1: req.body.addressLine1,
             addressLine2: req.body.addressLine2,
-            roleMaster: req.body.roleMaster,
             organizationId: req.body.organizationId,
             designationId: req.body.organizationId,
             country: req.body.country,
@@ -83,13 +82,19 @@ class EmployeeService {
             pincode: req.body.pincode,
             updatedAt: new Date()
         };
-        var updatedEmployee = await Employee.update(employee, { where: { id: employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });;
+        var updatedEmployee = await Employee.update(employee, { where: { id: employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
+        this.mapRolesToEmployee(employeeId, req.body.roleMasterId, req.body.organizationId);
         return updatedEmployee;
     }
 
     static async getEmployeeDetailsId(req, res) {
         var employee = await Employee.findByPk(req.query.employeeId).then(data => employee = data);
-        return employee;
+        var roleEmployeeList = await RoleEmployee.findAll({where : {employeeId: req.query.employeeId}}).then(data => roleEmployeeList = data);
+        var employeeAndRoleRmployee = {
+            employee: employee,
+            roleEmployeeList: roleEmployeeList
+        };
+        return employeeAndRoleRmployee;
     }
 
     static async checkEmailIdOfEmployee(req) {
@@ -116,6 +121,35 @@ class EmployeeService {
             systemGeneratedEmpCode = "EMP-001";
         }
         return systemGeneratedEmpCode;
+    }
+
+    static async mapRolesToEmployee(employeeId, commaSepratedRoleMasterIds, orgId) {
+        console.log('employeeId : ', employeeId);
+        console.log('commaSepratedRoleMasterIds : ', commaSepratedRoleMasterIds);
+        // var employee = null;
+        var countIfEmployeeIsNewCreatedOrNot = await RoleEmployee.findAndCountAll({
+            where: { organizationId: orgId, employeeId: employeeId },
+        }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
+        console.log('countIfEmployeeIsNewCreatedOrNot : ', countIfEmployeeIsNewCreatedOrNot);
+        if (commaSepratedRoleMasterIds && commaSepratedRoleMasterIds != undefined && commaSepratedRoleMasterIds != null && commaSepratedRoleMasterIds.length != 0) {
+            for (var i = 0; i < commaSepratedRoleMasterIds.length; i++) {
+                var roleEmployee = {
+                    organizationId: orgId,
+                    employeeId: employeeId,
+                    roleMasterId: commaSepratedRoleMasterIds[i]
+                }
+                if (countIfEmployeeIsNewCreatedOrNot == 0) {
+                    RoleEmployee.create(roleEmployee).then(data => {console.log('data to save in role employee : ', data)});
+                } else {
+                    await RoleEmployee.destroy({
+                        where: {
+                            organizationId: orgId, employeeId: employeeId
+                        }
+                    }).then(data => console.log('number of role employee deleted : ', data)).catch(err => { throw new Error(err) });
+                    RoleEmployee.create(roleEmployee).then(data => {console.log('data to save in role employee : ', data)});
+                }
+            }
+        }        
     }
 }
 
