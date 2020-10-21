@@ -5,6 +5,8 @@ const cors = require('cors');
 const PORT = 3000;
 const PlatformType = require('./models/seed-data/PlatformType');
 const RoleEmployee = require('./models/employee/RoleEmployee');
+const EmployeeProject = require('./models/employee/EmployeeProject');
+const Project = require('./models/project/Project');
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api', require('./routes/index'));
@@ -25,6 +27,8 @@ const sequelize = require('./config/sequelize-db');
 // sequelize.sync();
 PlatformType.sync();
 RoleEmployee.sync();
+Project.sync();
+EmployeeProject.sync();
 sequelize.sync().then(result => {
     // console.log(result);
     app.listen(PORT, function() {

@@ -9,5 +9,6 @@ router.use('/seedData', require('./api/seed-data-routes'));
 
 router.use('/designation', require('./api/designation-routes'));
 
+router.use('/projects', require('./api/project-routes'));
 
 module.exports = router;
