@@ -46,7 +46,7 @@ class ProjectService {
             };
             var newProject = await Project.create(project).then(data => newProject = data);
             this.mapProjectToEmployee(newProject.id, req.body.employeeId, req.body.organizationId);
-            return newEmployee;
+            return newProject;
         }        
     }
 

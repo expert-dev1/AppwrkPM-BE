@@ -16,8 +16,10 @@ class ProjectController {
     static async saveProject(req, res) {
         ProjectService.saveProject(req, res).then(response => {
             const data = { "project": response }
+            console.log('inside save methode of controller success : ', response);
             RestServiceTemplateUtils.createdSuccessResponse(data, res);
         }).catch(error => {
+            console.log('inside save methode of controller error : ', error);
             const err = { "error": error }
             RestServiceTemplateUtils.createdSuccessResponse(err, res);
         });
