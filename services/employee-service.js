@@ -160,7 +160,7 @@ class EmployeeService {
                 as: 'designation',
                 attributes: ['name']
             }],
-            attributes: ['empCode', 'firstName'],
+            attributes: ['empCode', 'firstName', 'id', 'lastName'],
         }).then(data => employeeList = data);
         return employeeList;
     }
