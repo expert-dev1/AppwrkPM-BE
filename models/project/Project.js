@@ -13,7 +13,7 @@ const Project = sequelize.define('project', {
     startDate: { type: Sequelize.DATE, allowNull: false },
     endDate: { type: Sequelize.DATE },
     timeType: { type: Sequelize.STRING, allowNull: false },
-    amount: { type: Sequelize.STRING, allowNull: false },
+    amount: { type: Sequelize.STRING },
     status: { type: Sequelize.STRING(50), allowNull: false },
     // project type
     createdAt: Sequelize.DATE,

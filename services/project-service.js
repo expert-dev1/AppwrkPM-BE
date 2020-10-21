@@ -71,7 +71,9 @@ class ProjectService {
     static async checkIfProjectNameAlreadyExists(req) {
         var duplicateRowsCount = await Project.findAndCountAll({ where: { name: req.query.name, organizationId: req.query.orgId } }).then(data => duplicateRowsCount = data.count);
         if (duplicateRowsCount != null && duplicateRowsCount != 0) {
-            return "PROJECT_NAME_ALREADY_REGISTERED";
+            return false;
+        } else {
+            return true;
         }
     }
 
