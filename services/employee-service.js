@@ -152,8 +152,10 @@ class EmployeeService {
             where: { organizationId: req.query.orgId },
             include: [{
                 model: Designation,
-                as: 'designation'
+                as: 'designation',
+                attributes: ['name']
             }],
+            attributes: ['empCode', 'firstName', 'id', 'lastName'],
         }).then(data => employeeList = data);
         return employeeList;
     }
