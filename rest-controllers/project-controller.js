@@ -42,6 +42,16 @@ class ProjectController {
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
         });
     }
+
+    static async checkIfProjectNameAlreadyExists(req, res) {
+        ProjectService.checkIfProjectNameAlreadyExists(req, res).then(response => {
+            const data = { "project": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
+    }
 }
 
 module.exports = ProjectController;

@@ -10,7 +10,7 @@ router.put('/', ProjectController.updateProject);
 
 router.get('/', ProjectController.getProjectDetailsId);
 
-// router.get('/checkProjectName', ProjectController.checkEmailIdOfEmployee);
+router.get('/checkIfProjectNameAlreadyExists', ProjectController.checkIfProjectNameAlreadyExists);
 
 // router.get('/getEmployeeListByOrgId', ProjectController.getEmployeeListByOrgId);
 

@@ -41,6 +41,7 @@ class ProjectService {
                 timeType: req.body.timeType,
                 amount: req.body.amount && req.body.amount != undefined && req.body.amount != null ? req.body.amount : null,
                 status: req.body.status,
+                platformTypeId: req.body.platformTypeId,
                 organizationId: req.body.organizationId
             };
             var newProject = await Project.create(project).then(data => newProject = data);
@@ -59,11 +60,19 @@ class ProjectService {
             amount: req.body.amount && req.body.amount != undefined && req.body.amount != null ? req.body.amount : null,
             status: req.body.status,
             organizationId: req.body.organizationId,
+            platformTypeId: req.body.platformTypeId,
             updatedAt: new Date()
         };
         var updatedProject = await Project.update(project, { where: { id: projectId } }).then(numberOfRowsAffected => updatedProject = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
         this.mapProjectToEmployee(projectId, req.body.employeeId, req.body.organizationId);
         return updatedProject;
+    }
+
+    static async checkIfProjectNameAlreadyExists(req) {
+        var duplicateRowsCount = await Project.findAndCountAll({ where: { name: req.query.name, organizationId: req.query.orgId } }).then(data => duplicateRowsCount = data.count);
+        if (duplicateRowsCount != null && duplicateRowsCount != 0) {
+            return "PROJECT_NAME_ALREADY_REGISTERED";
+        }
     }
 
     static async mapProjectToEmployee(projectId, employeeIds, orgId) {
