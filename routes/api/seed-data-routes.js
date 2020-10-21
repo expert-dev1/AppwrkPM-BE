@@ -7,4 +7,6 @@ router.get('/getAllStateListByCountryId', SeedDataController.getAllStateListByCo
 
 router.get('/getAllCityListByStateId', SeedDataController.getAllCityListByStateId);
 
+router.get('/getPlatformTypeList', SeedDataController.getPlatformTypeList);
+
 module.exports = router;

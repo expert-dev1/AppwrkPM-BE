@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const PORT = 3000;
+const PlatformType = require('./models/seed-data/PlatformType');
 const RoleEmployee = require('./models/employee/RoleEmployee');
 app.use(cors());
 app.use(bodyParser.json());
@@ -22,7 +23,8 @@ const sequelize = require('./config/sequelize-db');
 // Sync all models that are not 
 // already in the database 
 // sequelize.sync();
-
+PlatformType.sync();
+RoleEmployee.sync();
 sequelize.sync().then(result => {
     // console.log(result);
     app.listen(PORT, function() {

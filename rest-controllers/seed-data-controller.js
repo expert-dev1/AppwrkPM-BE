@@ -32,6 +32,16 @@ class SeedDataController {
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
         });
     }
+
+    static async getPlatformTypeList(req, res) {
+        SeedDataService.getPlatformTypeList(req, res).then(response => {
+            const data = { "platformTypeList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
+    }
 }
 
 module.exports = SeedDataController;

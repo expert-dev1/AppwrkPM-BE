@@ -2,6 +2,7 @@
 var Country = require('../models/seed-data/Country');
 var State = require('../models/seed-data/State');
 var City = require('../models/seed-data/City');
+var PlatformType = require('../models/seed-data/PlatformType');
 
 // const sequelize = require('../config/sequelize-db');
 class SeedDataService {
@@ -19,6 +20,11 @@ class SeedDataService {
     static async getAllCityListByStateId(req, res) {
         var cityList = await City.findAndCountAll({where : {state: req.query.stateId}}).then(data => cityList = data.rows).catch(err => { console.log('err : ', err) });
         return cityList;
+    }
+
+    static async getPlatformTypeList(req, res) {
+        var platformTypeList = await PlatformType.findAll().then(data => platformTypeList = data).catch(err => { console.log('err : ', err) });
+        return platformTypeList;
     }
 
 }
