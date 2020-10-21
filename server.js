@@ -5,6 +5,8 @@ const cors = require('cors');
 const PORT = 3000;
 const PlatformType = require('./models/seed-data/PlatformType');
 const RoleEmployee = require('./models/employee/RoleEmployee');
+const EmployeeProject = require('./models/employee/EmployeeProject');
+const Project = require('./models/project/Project');
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api', require('./routes/index'));
@@ -15,6 +17,10 @@ app.use('/api', require('./routes/index'));
 // we have defined model. 
 const sequelize = require('./config/sequelize-db');
   
+console.log(`Your port is ${process.env.PORT}`); // undefined
+const dotenv = require('dotenv');
+dotenv.config();
+console.log(`Your port is ${process.env.PORT}`);
 // Import the user model we have defined 
   
 // Create all the table defined using  
@@ -22,9 +28,11 @@ const sequelize = require('./config/sequelize-db');
   
 // Sync all models that are not 
 // already in the database 
-// sequelize.sync();
-//  PlatformType.sync();
-//  RoleEmployee.sync();
+sequelize.sync();
+// PlatformType.sync();
+// RoleEmployee.sync();
+// Project.sync();
+// EmployeeProject.sync();
 sequelize.sync().then(result => {
     // console.log(result)
     // console.log(result);

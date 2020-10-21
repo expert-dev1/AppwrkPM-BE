@@ -58,9 +58,6 @@ const Employee = sequelize.define('employee', {
         get() {
           return `${this.firstName} ${this.lastName}`;
         },
-        set(value) {
-          throw new Error('Do not try to set the `fullName` value!');
-        }
       }
 });
 

@@ -57,7 +57,6 @@ class EmployeeService {
             city: req.body.city,
             pincode: req.body.pincode,
         };
-
         var newEmployee = await Employee.create(employee).then(data => newEmployee = data);
         this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, req.body.organizationId);
         return newEmployee;
@@ -123,20 +122,16 @@ class EmployeeService {
         return systemGeneratedEmpCode;
     }
 
-    static async mapRolesToEmployee(employeeId, commaSepratedRoleMasterIds, orgId) {
-        console.log('employeeId : ', employeeId);
-        console.log('commaSepratedRoleMasterIds : ', commaSepratedRoleMasterIds);
-        // var employee = null;
+    static async mapRolesToEmployee(employeeId, roleMasterIds, orgId) {
         var countIfEmployeeIsNewCreatedOrNot = await RoleEmployee.findAndCountAll({
             where: { organizationId: orgId, employeeId: employeeId },
         }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
-        console.log('countIfEmployeeIsNewCreatedOrNot : ', countIfEmployeeIsNewCreatedOrNot);
-        if (commaSepratedRoleMasterIds && commaSepratedRoleMasterIds != undefined && commaSepratedRoleMasterIds != null && commaSepratedRoleMasterIds.length != 0) {
-            for (var i = 0; i < commaSepratedRoleMasterIds.length; i++) {
+        if (roleMasterIds && roleMasterIds != undefined && roleMasterIds != null && roleMasterIds.length != 0) {
+            for (var i = 0; i < roleMasterIds.length; i++) {
                 var roleEmployee = {
                     organizationId: orgId,
                     employeeId: employeeId,
-                    roleMasterId: commaSepratedRoleMasterIds[i]
+                    roleMasterId: roleMasterIds[i]
                 }
                 if (countIfEmployeeIsNewCreatedOrNot == 0) {
                     RoleEmployee.create(roleEmployee).then(data => { console.log('data to save in role employee : ', data) });

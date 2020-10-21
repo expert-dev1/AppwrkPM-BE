@@ -1,18 +1,16 @@
 // Include Sequelize module 
 const Sequelize = require('sequelize') 
-  
+const {ENV,HOST,PASSWORD,PORT,USER} = require('./config');
 // Creating new Object of Sequelize 
 const sequelize = new Sequelize( 
     'project_management', 
-    'root', 
-    '', { 
-  
+    USER, 
+    PASSWORD, { 
         // Explicitly specifying  
         // mysql database 
         dialect: 'mysql', 
-  
         // By default host is 'localhost'            
-        host: '127.0.0.1'
+        host: HOST
     } 
 ); 
   
