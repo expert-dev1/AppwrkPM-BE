@@ -89,7 +89,7 @@ class EmployeeService {
 
     static async getEmployeeDetailsId(req, res) {
         var employee = await Employee.findByPk(req.query.employeeId).then(data => employee = data);
-        var roleEmployeeList = await RoleEmployee.findAll({where : {employeeId: req.query.employeeId}}).then(data => roleEmployeeList = data);
+        var roleEmployeeList = await RoleEmployee.findAll({ where: { employeeId: req.query.employeeId } }).then(data => roleEmployeeList = data);
         var employeeAndRoleRmployee = {
             employee: employee,
             roleEmployeeList: roleEmployeeList
@@ -139,17 +139,28 @@ class EmployeeService {
                     roleMasterId: commaSepratedRoleMasterIds[i]
                 }
                 if (countIfEmployeeIsNewCreatedOrNot == 0) {
-                    RoleEmployee.create(roleEmployee).then(data => {console.log('data to save in role employee : ', data)});
+                    RoleEmployee.create(roleEmployee).then(data => { console.log('data to save in role employee : ', data) });
                 } else {
                     await RoleEmployee.destroy({
                         where: {
                             organizationId: orgId, employeeId: employeeId
                         }
                     }).then(data => console.log('number of role employee deleted : ', data)).catch(err => { throw new Error(err) });
-                    RoleEmployee.create(roleEmployee).then(data => {console.log('data to save in role employee : ', data)});
+                    RoleEmployee.create(roleEmployee).then(data => { console.log('data to save in role employee : ', data) });
                 }
             }
-        }        
+        }
+    }
+
+    static async getEmployeeListByOrgId(req) {
+        var employeeList = await Employee.findAll({
+            where: { organizationId: req.query.orgId },
+            include: [{
+                model: Designation,
+                as: 'designation'
+            }],
+        }).then(data => employeeList = data);
+        return employeeList;
     }
 }
 

@@ -12,4 +12,6 @@ router.get('/', EmployeeController.getEmployeeDetailsId);
 
 router.get('/checkEmailIdOfEmployee', EmployeeController.checkEmailIdOfEmployee);
 
+router.get('/getEmployeeListByOrgId', EmployeeController.getEmployeeListByOrgId);
+
 module.exports = router;

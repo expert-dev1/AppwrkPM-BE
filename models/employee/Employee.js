@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-
+const { DataTypes } = require("sequelize");
 // const { DataTypes } = require("sequelize/types");
 const sequelize = require("../../config/sequelize-db");
 const Organization = require('../organization/Organization');
@@ -53,6 +53,15 @@ const Employee = sequelize.define('employee', {
     pincode: { type: Sequelize.INTEGER(6), allowNull: false },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
+    fullName: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return `${this.firstName} ${this.lastName}`;
+        },
+        set(value) {
+          throw new Error('Do not try to set the `fullName` value!');
+        }
+      }
 });
 
 // Employee.hasOne(Organization, { foreignKey: 'organizations' });

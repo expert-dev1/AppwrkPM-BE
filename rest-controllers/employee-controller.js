@@ -51,6 +51,16 @@ class EmployeeController {
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
         });
     }
+
+    static async getEmployeeListByOrgId(req, res) {
+        EmployeeService.getEmployeeListByOrgId(req, res).then(response => {
+            const data = { "employeeList": response }
+            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
+    }
 }
 
 module.exports = EmployeeController;
