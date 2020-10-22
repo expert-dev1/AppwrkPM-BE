@@ -13,14 +13,14 @@ class RestServiceTemplateUtils {
 
     static async response(httpStatusCode, isSuccess, message, data, res) {
         var responseMap = {
-            status: httpStatusCode,
+            statusCode: httpStatusCode,
             isSuccess: isSuccess,
             message: message,
         }
         if (isSuccess) {
             responseMap.data = {
-                data: data
-            };
+                data : data
+            }
         } else {
             responseMap.error = {
                 "error": data
@@ -31,7 +31,7 @@ class RestServiceTemplateUtils {
     }
 
     static async getRecordSuccessResponse(data, res) {
-        if (data.error) {
+        if (data && data.error) {
             this.response(HttpStatus.INTERNAL_SERVER_ERROR, false, data.error.message, data, res);
         } else {
             this.response(HttpStatus.OK, true, "Record successfully fetched", data, res);

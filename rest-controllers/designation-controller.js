@@ -4,10 +4,8 @@ const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUti
 class DesignationController {
 
     static async getDesignationListByOrgIdWithPage(req, res) {
-        // var data = { "id": 1, "name": "Amit Malik", "age": 26 };
         DesignationService.getDesignationListByOrgIdWithPage(req, res).then(response => {
-            const data = { "designationList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -15,10 +13,8 @@ class DesignationController {
     }
 
     static async saveDesignation(req, res, next) {
-        // var data = { "id": 1, "name": "Amit Malik", "age": 26 };
         DesignationService.saveDesignation(req, res).then(response => {
-            const data = { "designation": response }
-            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.createdSuccessResponse(err, res);
@@ -26,10 +22,8 @@ class DesignationController {
     }
 
     static async updateDesignation(req, res) {
-        // var data = { "id": 1, "name": "Amit Malik", "age": 26 };
         DesignationService.updateDesignation(req, res).then(response => {
-            const data = { "designation": response }
-            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.createdSuccessResponse(err, res);
@@ -38,8 +32,7 @@ class DesignationController {
 
     static async getDesignationDetailsById(req, res) {
         DesignationService.getDesignationDetailsById(req, res).then(response => {
-            const data = { "designation": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -48,8 +41,7 @@ class DesignationController {
 
     static async deleteDesignationById(req, res) {
         DesignationService.deleteDesignationById(req, res).then(response => {
-            const data = { "designation": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -58,8 +50,7 @@ class DesignationController {
 
     static async getDesignationListByOrgId(req, res) {
         DesignationService.getDesignationListByOrgId(req, res).then(response => {
-            const data = { "designationList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);

@@ -16,9 +16,8 @@ class RoleMasterService {
             where: { organizationId: orgId },
             order: [
                 [sortField, sortDirection],
-            ], // conditions
+            ],
         }).then(data => {
-            console.log('data inside pagination function : ', data);
             const totalPages = Math.ceil(data.count / limit);
             roleMasterList = {
                 "content": data.rows,

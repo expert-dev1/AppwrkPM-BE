@@ -8,7 +8,8 @@ const RoleEmployee = require('./models/employee/RoleEmployee');
 const EmployeeProject = require('./models/employee/EmployeeProject');
 const Project = require('./models/project/Project');
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use('/api', require('./routes/index'));
 
 // DB Connection 
