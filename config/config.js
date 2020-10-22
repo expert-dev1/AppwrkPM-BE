@@ -8,4 +8,6 @@ module.exports = {
   HOST: process.env.HOST,
   USER: process.env.USER,
   PASSWORD: process.env.PASSWORD,
+  SECRET_KEY: process.env.SECRET_KEY,
+  EXPIRE_IN: process.env.EXPIRE_IN
 };

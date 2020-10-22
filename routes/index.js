@@ -11,4 +11,8 @@ router.use('/designation', require('./api/designation-routes'));
 
 router.use('/projects', require('./api/project-routes'));
 
+router.use('/organization', require('./api/organization-routes'));
+
+router.use('/auth', require('./api/auth-routes'));
+
 module.exports = router;

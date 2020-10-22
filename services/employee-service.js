@@ -2,7 +2,9 @@
 var Employee = require('../models/employee/Employee');
 const Designation = require('../models/designation/Designation');
 const RoleEmployee = require('../models/employee/RoleEmployee');
-// const sequelize = require('../config/sequelize-db');
+const AuthService = require('../services/auth-service');
+
+
 class EmployeeService {
 
     static async getEmployeeListByOrgIdWithPage(req, res) {
@@ -60,6 +62,7 @@ class EmployeeService {
         };
         var newEmployee = await Employee.create(employee).then(data => newEmployee = data);
         this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, req.body.organizationId);
+        AuthService.createUserFromEmployee(newEmployee);
         return newEmployee;
     }
 
