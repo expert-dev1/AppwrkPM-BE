@@ -1,5 +1,7 @@
 const Project = require('../models/project/Project');
 const EmployeeProject = require('../models/employee/EmployeeProject');
+const Organization = require('../models/organization/Organization');
+const PlatformType = require('../models/seed-data/PlatformType');
 class ProjectService {
 
     static async getProjectListByOrgIdWithPage(req, res) {
@@ -15,7 +17,15 @@ class ProjectService {
             where: { organizationId: orgId },
             order: [
                 [sortField, sortDirection],
-            ], // conditions
+            ],
+            include: [{
+                model: Organization,
+                as: 'designation'
+            },
+            {
+                model: PlatformType,
+                as: 'platformType'
+            }],
         }).then(data => {
             const totalPages = Math.ceil(data.count / limit);
             projectList = {
@@ -47,7 +57,7 @@ class ProjectService {
             var newProject = await Project.create(project).then(data => newProject = data);
             this.mapProjectToEmployee(newProject.id, req.body.employeeId, req.body.organizationId);
             return newProject;
-        }        
+        }
     }
 
     static async updateProject(req) {
