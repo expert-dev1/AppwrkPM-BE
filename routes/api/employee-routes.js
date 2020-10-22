@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const EmployeeController = require('../../rest-controllers/employee-controller');
-
+const multer  = require('multer')
+const upload = multer({ dest: 'storage/' })
 
 router.post('/getEmployeeListByOrgIdWithPage', EmployeeController.getEmployeeListByOrgIdWithPage);
 
-router.post('/', EmployeeController.saveEmployee);
+router.post('/', upload.single('photo'), EmployeeController.saveEmployee);
 
 router.put('/', EmployeeController.updateEmployee);
 

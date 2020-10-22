@@ -4,8 +4,7 @@ class EmployeeController {
 
     static async getEmployeeListByOrgIdWithPage(req, res) {
         EmployeeService.getEmployeeListByOrgIdWithPage(req, res).then(response => {
-            const data = { "employeeList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -13,9 +12,8 @@ class EmployeeController {
     }
 
     static async saveEmployee(req, res) {
-        EmployeeService.saveEmployee(req, res).then(response => {
-            const data = { "employee": response }
-            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+        EmployeeService.saveEmployee(req, res).then(response => { 
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.createdSuccessResponse(err, res);
@@ -23,9 +21,8 @@ class EmployeeController {
     }
 
     static async updateEmployee(req, res) {
-        EmployeeService.updateEmployee(req, res).then(response => {
-            const data = { "employee": response }
-            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+        EmployeeService.updateEmployee(req, res).then(response => { 
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.createdSuccessResponse(err, res);
@@ -33,9 +30,8 @@ class EmployeeController {
     }
 
     static async getEmployeeDetailsId(req, res) {
-        EmployeeService.getEmployeeDetailsId(req, res).then(response => {
-            const data = { "employee": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        EmployeeService.getEmployeeDetailsId(req, res).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -43,9 +39,8 @@ class EmployeeController {
     }
 
     static async checkEmailIdOfEmployee(req, res) {
-        EmployeeService.checkEmailIdOfEmployee(req, res).then(response => {
-            const data = { "employee": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        EmployeeService.checkEmailIdOfEmployee(req, res).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -53,9 +48,8 @@ class EmployeeController {
     }
 
     static async getEmployeeListByOrgId(req, res) {
-        EmployeeService.getEmployeeListByOrgId(req, res).then(response => {
-            const data = { "employeeList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        EmployeeService.getEmployeeListByOrgId(req, res).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);

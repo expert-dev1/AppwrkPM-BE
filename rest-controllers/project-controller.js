@@ -5,8 +5,7 @@ class ProjectController {
 
     static async getProjectListByOrgIdWithPage(req, res) {
         ProjectService.getProjectListByOrgIdWithPage(req, res).then(response => {
-            const data = { "projectList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -15,9 +14,7 @@ class ProjectController {
 
     static async saveProject(req, res) {
         ProjectService.saveProject(req, res).then(response => {
-            const data = { "project": response }
-            console.log('inside save methode of controller success : ', response);
-            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             console.log('inside save methode of controller error : ', error);
             const err = { "error": error }
@@ -27,8 +24,7 @@ class ProjectController {
 
     static async updateProject(req, res) {
         ProjectService.updateProject(req, res).then(response => {
-            const data = { "project": response }
-            RestServiceTemplateUtils.createdSuccessResponse(data, res);
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.createdSuccessResponse(err, res);
@@ -37,8 +33,7 @@ class ProjectController {
 
     static async getProjectDetailsId(req, res) {
         ProjectService.getProjectDetailsId(req, res).then(response => {
-            const data = { "project": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);

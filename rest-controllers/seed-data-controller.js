@@ -5,8 +5,7 @@ class SeedDataController {
 
     static async getAllCountryList(req, res) {
         SeedDataService.getAllCountryList(req, res).then(response => {
-            const data = { "countryList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -14,9 +13,8 @@ class SeedDataController {
     }
 
     static async getAllStateListByCountryId(req, res) {
-        SeedDataService.getAllStateListByCountryId(req, res).then(response => {
-            const data = { "stateList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        SeedDataService.getAllStateListByCountryId(req, res).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -24,9 +22,8 @@ class SeedDataController {
     }
 
     static async getAllCityListByStateId(req, res) {
-        SeedDataService.getAllCityListByStateId(req, res).then(response => {
-            const data = { "cityList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        SeedDataService.getAllCityListByStateId(req, res).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
@@ -34,9 +31,8 @@ class SeedDataController {
     }
 
     static async getPlatformTypeList(req, res) {
-        SeedDataService.getPlatformTypeList(req, res).then(response => {
-            const data = { "platformTypeList": response }
-            RestServiceTemplateUtils.getRecordSuccessResponse(data, res);
+        SeedDataService.getPlatformTypeList(req, res).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);

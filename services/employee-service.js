@@ -38,6 +38,7 @@ class EmployeeService {
     }
 
     static async saveEmployee(req) {
+        console.log('req body of employee : ', req.body);
         var employee = {
             empCode: await this.getEmployeeCode(req.body.organizationId),
             firstName: req.body.firstName,

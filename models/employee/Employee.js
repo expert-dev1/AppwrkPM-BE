@@ -15,7 +15,7 @@ const Employee = sequelize.define('employee', {
         allowNull: false,
         primaryKey: true
     },
-
+    imagePath: { type: Sequelize.STRING },
     empCode: { type: Sequelize.STRING, allowNull: false },
     firstName: { type: Sequelize.STRING(50), allowNull: false },
     middleName: { type: Sequelize.STRING(50) },
