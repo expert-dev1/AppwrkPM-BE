@@ -20,11 +20,11 @@ class ProjectService {
             ],
             include: [{
                 model: Organization,
-                as: 'designation'
+                as: 'organization'
             },
             {
                 model: PlatformType,
-                as: 'platformType'
+                as: 'platform_type'
             }],
         }).then(data => {
             const totalPages = Math.ceil(data.count / limit);
@@ -36,7 +36,7 @@ class ProjectService {
                 "currentPageNumber": offset,
                 "currentPageSize": data.length,
             }
-        });
+        }).catch(error => {console.log('error in getting list of project with pagination : ', error)});
         return projectList;
     }
 
