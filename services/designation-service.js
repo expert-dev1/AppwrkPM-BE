@@ -65,7 +65,7 @@ class DesignationService {
         // var duplicateRowsCount = await Designation.findAndCountAll({ where: { name: Sequelize.fn('lower', Sequelize.col(designation.name)), organizationId: req.body.organizationId } }).then(data => duplicateRowsCount = data.count);
         var duplicateRowsCount = await Designation.findAndCountAll({ where: { name: designation.name, organizationId: designation.organizationId } }).then(data => duplicateRowsCount = data.count);
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
-            var updatedDesignation = await Designation.update(designation, { where: { id: designationId } }).then(numberOfRowsAffected => updatedDesignation = numberOfRowsAffected).catch(err => { console.log('err : ', err) });;
+            var updatedDesignation = await Designation.update(designation, { where: { id: designationId } }).then(numberOfRowsAffected => updatedDesignation = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
             return updatedDesignation;
         } else {
             throw new Error("RECORD_ALREADY_EXISTS");

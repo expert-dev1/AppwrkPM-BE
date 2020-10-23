@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { validateToken } = require('../../common-utils/validate-token');
 const RoleMasterController = require('../../rest-controllers/role-master-controller');
 
 

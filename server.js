@@ -21,6 +21,7 @@ const sequelize = require('./config/sequelize-db');
   
 console.log(`Your port is ${process.env.PORT}`); // undefined
 const dotenv = require('dotenv');
+const UserTokens = require('./models/auth/UserTokens');
 dotenv.config();
 console.log(`Your port is ${process.env.PORT}`);
 // Import the user model we have defined 
@@ -30,14 +31,14 @@ console.log(`Your port is ${process.env.PORT}`);
   
 // Sync all models that are not 
 // already in the database 
-sequelize.sync();
+// sequelize.sync();
 // PlatformType.sync();
 // RoleEmployee.sync();
 // Project.sync();
 // EmployeeProject.sync();
 // Users.sync();
+UserTokens.sync();
 sequelize.sync().then(result => {
-    // console.log(result)
     // console.log(result);
     app.listen(PORT, function() {
         console.log("Server is running on Port: " + PORT);

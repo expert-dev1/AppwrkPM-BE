@@ -1,5 +1,11 @@
+const {validateToken} = require('../common-utils/validate-token');
+
 const router = require('express').Router();
 
+
+router.use('/auth', require('./api/auth-routes'));
+
+router.use('/', validateToken);
 
 router.use('/roleMaster', require('./api/role-master-routes'));
 
@@ -12,7 +18,5 @@ router.use('/designation', require('./api/designation-routes'));
 router.use('/projects', require('./api/project-routes'));
 
 router.use('/organization', require('./api/organization-routes'));
-
-router.use('/auth', require('./api/auth-routes'));
 
 module.exports = router;

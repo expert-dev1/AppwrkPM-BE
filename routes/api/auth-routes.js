@@ -4,6 +4,10 @@ const AuthController = require('../../rest-controllers/auth-controller');
 
 router.post('/login', AuthController.login);
 
+router.post('/getRefreshToken', AuthController.getRefreshToken);
+
+router.get('/logout', AuthController.logout);
+
 // router.post('/', DesignationController.saveDesignation);
 
 // router.put('/', DesignationController.updateDesignation);
