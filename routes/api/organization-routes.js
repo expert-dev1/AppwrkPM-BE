@@ -3,13 +3,13 @@ const OrganizationController = require('../../rest-controllers/organization-cont
 
 router.post('/getOrganizationListByOrgIdWithPage', OrganizationController.getOrganizationListByOrgIdWithPage);
 
-// router.post('/', OrganizationController.saveOrganization);
+router.post('/', OrganizationController.saveOrganization);
 
-// router.put('/', OrganizationController.updateOrganization);
+router.put('/', OrganizationController.updateOrganization);
 
-// router.get('/', OrganizationController.getEmployeeDetailsId);
+router.get('/', OrganizationController.getOrganizationDetailsById);
 
-// router.get('/checkEmailIdOfEmployee', OrganizationController.checkEmailIdOfEmployee);
+router.get('/checkOrganizationCode', OrganizationController.checkOrganizationCode);
 
 // router.get('/getEmployeeListByOrgId', OrganizationController.getEmployeeListByOrgId);
 

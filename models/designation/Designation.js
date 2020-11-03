@@ -45,7 +45,10 @@ const Designation = sequelize.define('designation', {
      updatedAt: Sequelize.DATE, 
 });
 
-Designation.belongsTo(Organization);
+Designation.belongsTo(Organization, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
 
 // Exporting RoleMaster, using this constant 
 // we can perform CRUD operations on 

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const {validateToken} = require('../../common-utils/validate-token');
 const AuthController = require('../../rest-controllers/auth-controller');
 
 
@@ -8,7 +9,9 @@ router.post('/getRefreshToken', AuthController.getRefreshToken);
 
 router.get('/logout', AuthController.logout);
 
-// router.post('/', DesignationController.saveDesignation);
+router.use('/', validateToken);
+
+router.post('/changePassword', AuthController.changePassword);
 
 // router.put('/', DesignationController.updateDesignation);
 

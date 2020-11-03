@@ -17,8 +17,17 @@ const RoleEmployee = sequelize.define('role_employee', {
     updatedAt: Sequelize.DATE,
 });
 // Employee.belongsTo(Organization);
-RoleEmployee.belongsTo(Organization);
-RoleEmployee.belongsTo(Employee);
-RoleEmployee.belongsTo(RoleMaster);
+RoleEmployee.belongsTo(Organization, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
+RoleEmployee.belongsTo(Employee, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
+RoleEmployee.belongsTo(RoleMaster, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
 
 module.exports = RoleEmployee;

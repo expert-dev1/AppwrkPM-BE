@@ -15,4 +15,6 @@ router.get('/checkEmailIdOfEmployee', EmployeeController.checkEmailIdOfEmployee)
 
 router.get('/getEmployeeListByOrgId', EmployeeController.getEmployeeListByOrgId);
 
+router.delete('/', EmployeeController.changeStatusOfEmployee);
+
 module.exports = router;

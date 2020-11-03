@@ -3,7 +3,7 @@ const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUti
 class OrganizationController {
 
     static async getOrganizationListByOrgIdWithPage(req, res) {
-        OrganizationService.getOrganizationListByOrgIdWithPage(req, res).then(response => {
+        OrganizationService.getOrganizationListByOrgIdWithPage(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -11,23 +11,41 @@ class OrganizationController {
         });
     }
 
-    // static async saveOrganization(req, res) {
-    //     OrganizationService.saveOrganization(req, res).then(response => { 
-    //         RestServiceTemplateUtils.createdSuccessResponse(response, res);
-    //     }).catch(error => {
-    //         const err = { "error": error }
-    //         RestServiceTemplateUtils.createdSuccessResponse(err, res);
-    //     });
-    // }
+    static async saveOrganization(req, res) {
+        OrganizationService.saveOrganization(req).then(response => {
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.createdSuccessResponse(err, res);
+        });
+    }
 
-    // static async updateOrganization(req, res) {
-    //     OrganizationService.updateOrganization(req, res).then(response => { 
-    //         RestServiceTemplateUtils.createdSuccessResponse(response, res);
-    //     }).catch(error => {
-    //         const err = { "error": error }
-    //         RestServiceTemplateUtils.createdSuccessResponse(err, res);
-    //     });
-    // }
+    static async updateOrganization(req, res) {
+        OrganizationService.updateOrganization(req).then(response => { 
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.createdSuccessResponse(err, res);
+        });
+    }
+
+    static async getOrganizationDetailsById(req, res) {
+        OrganizationService.getOrganizationDetailsById(req).then(response => { 
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.createdSuccessResponse(err, res);
+        });
+    }
+
+    static async checkOrganizationCode(req, res) {
+        OrganizationService.checkOrganizationCode(req).then(response => { 
+            RestServiceTemplateUtils.createdSuccessResponse(response, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.createdSuccessResponse(err, res);
+        });
+    }
 }
 
 module.exports = OrganizationController;

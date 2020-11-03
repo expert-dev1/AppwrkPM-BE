@@ -19,7 +19,13 @@ const User = sequelize.define('user', {
     updatedAt: Sequelize.DATE,
 });
 
-User.belongsTo(Organization);
-User.belongsTo(Employee);
+User.belongsTo(Organization, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
+User.belongsTo(Employee, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
 
 module.exports = User;

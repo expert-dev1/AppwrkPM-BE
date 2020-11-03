@@ -4,13 +4,17 @@ const ProjectController = require('../../rest-controllers/project-controller');
 
 router.post('/getProjectListByOrgIdWithPage', ProjectController.getProjectListByOrgIdWithPage);
 
-router.post('/', ProjectController.saveProject);
+router.post('/', ProjectController.saveProjectDTO);
 
-router.put('/', ProjectController.updateProject);
+router.put('/', ProjectController.updateProjectDTO);
 
-router.get('/', ProjectController.getProjectDetailsId);
+router.get('/', ProjectController.getProjectDetailsById);
 
 router.get('/checkIfProjectNameAlreadyExists', ProjectController.checkIfProjectNameAlreadyExists);
+
+router.delete('/deleteClientMoreInfoById', ProjectController.deleteClientMoreInfoById);
+
+router.delete('/deleteEmployeeProjectById', ProjectController.deleteEmployeeProjectById);
 
 // router.get('/getEmployeeListByOrgId', ProjectController.getEmployeeListByOrgId);
 

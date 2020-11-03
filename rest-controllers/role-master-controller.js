@@ -4,7 +4,8 @@ const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUti
 class RoleMasterController {
 
     static async getRoleMasterListByOrgIdWithPage(req, res) {
-        RoleMasterService.getRoleMasterListByOrgIdWithPage(req, res).then(response => {
+        console.log('req.user inside getRoleMasterListByOrgIdWithPage : ', req.user);
+        RoleMasterService.getRoleMasterListByOrgIdWithPage(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -13,7 +14,7 @@ class RoleMasterController {
     }
 
     static async saveRoleMaster(req, res) {
-        RoleMasterService.saveRoleMaster(req, res).then(response => {
+        RoleMasterService.saveRoleMaster(req).then(response => {
             RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -22,7 +23,7 @@ class RoleMasterController {
     }
 
     static async updateRoleMaster(req, res) {
-        RoleMasterService.updateRoleMaster(req, res).then(response => {
+        RoleMasterService.updateRoleMaster(req).then(response => {
             RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -31,7 +32,7 @@ class RoleMasterController {
     }
 
     static async getRoleMasterDeatilsById(req, res) {
-        RoleMasterService.getRoleMasterDeatilsById(req, res).then(response => {
+        RoleMasterService.getRoleMasterDeatilsById(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -40,7 +41,7 @@ class RoleMasterController {
     }
 
     static async deleteRoleMasterById(req, res) {
-        RoleMasterService.deleteRoleMasterById(req, res).then(response => {
+        RoleMasterService.deleteRoleMasterById(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -49,7 +50,7 @@ class RoleMasterController {
     }
 
     static async getRoleMasterListByOrgId(req, res) {
-        RoleMasterService.getRoleMasterListByOrgId(req, res).then(response => {
+        RoleMasterService.getRoleMasterListByOrgId(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }

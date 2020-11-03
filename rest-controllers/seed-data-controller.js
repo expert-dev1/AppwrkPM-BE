@@ -4,7 +4,7 @@ const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUti
 class SeedDataController {
 
     static async getAllCountryList(req, res) {
-        SeedDataService.getAllCountryList(req, res).then(response => {
+        SeedDataService.getAllCountryList(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -13,7 +13,7 @@ class SeedDataController {
     }
 
     static async getAllStateListByCountryId(req, res) {
-        SeedDataService.getAllStateListByCountryId(req, res).then(response => { 
+        SeedDataService.getAllStateListByCountryId(req).then(response => { 
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -22,7 +22,7 @@ class SeedDataController {
     }
 
     static async getAllCityListByStateId(req, res) {
-        SeedDataService.getAllCityListByStateId(req, res).then(response => { 
+        SeedDataService.getAllCityListByStateId(req).then(response => { 
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -31,7 +31,7 @@ class SeedDataController {
     }
 
     static async getPlatformTypeList(req, res) {
-        SeedDataService.getPlatformTypeList(req, res).then(response => { 
+        SeedDataService.getPlatformTypeList(req).then(response => { 
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }

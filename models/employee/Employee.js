@@ -26,6 +26,7 @@ const Employee = sequelize.define('employee', {
     dateOfJoining: { type: Sequelize.DATE, allowNull: false },
     addressLine1: { type: Sequelize.STRING(200), allowNull: false },
     addressLine2: { type: Sequelize.STRING(200) },
+    isDeleted: { type: Sequelize.BOOLEAN, allowNull: false},
     country: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -62,7 +63,13 @@ const Employee = sequelize.define('employee', {
 });
 
 // Employee.hasOne(Organization, { foreignKey: 'organizations' });
-Employee.belongsTo(Organization);
-Employee.belongsTo(Designation);
+Employee.belongsTo(Organization, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
+Employee.belongsTo(Designation, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
 
 module.exports = Employee;

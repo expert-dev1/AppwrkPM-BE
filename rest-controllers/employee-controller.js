@@ -3,7 +3,7 @@ const RestServiceTemplateUtils = require('../common-utils/RestServiceTemplateUti
 class EmployeeController {
 
     static async getEmployeeListByOrgIdWithPage(req, res) {
-        EmployeeService.getEmployeeListByOrgIdWithPage(req, res).then(response => {
+        EmployeeService.getEmployeeListByOrgIdWithPage(req).then(response => {
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -12,7 +12,7 @@ class EmployeeController {
     }
 
     static async saveEmployee(req, res) {
-        EmployeeService.saveEmployee(req, res).then(response => { 
+        EmployeeService.saveEmployee(req).then(response => { 
             RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -21,7 +21,7 @@ class EmployeeController {
     }
 
     static async updateEmployee(req, res) {
-        EmployeeService.updateEmployee(req, res).then(response => { 
+        EmployeeService.updateEmployee(req).then(response => { 
             RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -30,7 +30,7 @@ class EmployeeController {
     }
 
     static async getEmployeeDetailsId(req, res) {
-        EmployeeService.getEmployeeDetailsId(req, res).then(response => { 
+        EmployeeService.getEmployeeDetailsId(req).then(response => { 
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -39,7 +39,7 @@ class EmployeeController {
     }
 
     static async checkEmailIdOfEmployee(req, res) {
-        EmployeeService.checkEmailIdOfEmployee(req, res).then(response => { 
+        EmployeeService.checkEmailIdOfEmployee(req).then(response => { 
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }
@@ -48,7 +48,16 @@ class EmployeeController {
     }
 
     static async getEmployeeListByOrgId(req, res) {
-        EmployeeService.getEmployeeListByOrgId(req, res).then(response => { 
+        EmployeeService.getEmployeeListByOrgId(req).then(response => { 
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
+    }
+
+    static async changeStatusOfEmployee(req, res) {
+        EmployeeService.changeStatusOfEmployee(req).then(response => { 
             RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
         }).catch(error => {
             const err = { "error": error }

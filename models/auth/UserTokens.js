@@ -15,6 +15,9 @@ const UserTokens = sequelize.define('user_tokens', {
     updatedAt: Sequelize.DATE,
 });
 
-UserTokens.belongsTo(Users);
+UserTokens.belongsTo(Users, {
+    allowNull: false,
+    onDelete: 'restrict'
+});
 
 module.exports = UserTokens;

@@ -4,7 +4,9 @@ const Users = require("../models/auth/Users");
 const UserTokens = require("../models/auth/UserTokens");
 const jsonWebToken = require("jsonwebtoken");
 const { SECRET_KEY, EXPIRE_IN } = require("../config/config");
-const Sequelize = require("sequelize")
+// const Sequelize = require("sequelize");
+const ConstantUtils = require("../common-utils/ConstantUtils");
+const Employee = require("../models/employee/Employee");
 class AuthService {
 
     static async createUserFromEmployee(employee) {
@@ -27,19 +29,18 @@ class AuthService {
     static async getUserByUserName(username) {
         var user = await Users.findAll({
             where: { username: username },
+            include: [{
+                model: Employee,
+                as: 'employee'
+            }],
         }).then(data => user = data[0]).catch(error => { console.log('Error in getting user by Username : ', error) });
         return user;
     }
 
     static async markUserAsLoggedIn(userId, generatedJsonWebToken, refreshToken) {
         Users.update({ isLoggedIn: true }, { where: { id: userId } }).then(data => console.log('number of rows affected : ', data)).catch(err => { console.log('err : ', err) });
-        this.createUserToken(userId, generatedJsonWebToken, refreshToken);
+        await this.createUserToken(userId, generatedJsonWebToken, refreshToken);
     }
-
-    // static async getRefreshToken(payload) {
-    //     const refreshToken = jwt.sign({ user: payload }, jwtSecretString, { expiresIn: '30d' }); 
-    //     return refreshToken;
-    // }
 
     static async createUserToken(userId, generatedJsonWebToken, refreshToken) {
         var checkWeatherUserLoggedInOrNot = await UserTokens.findAndCountAll({
@@ -52,24 +53,25 @@ class AuthService {
         }
         if (checkWeatherUserLoggedInOrNot && checkWeatherUserLoggedInOrNot != undefined && checkWeatherUserLoggedInOrNot != null && checkWeatherUserLoggedInOrNot > 0) {
             UserTokens.update(userTokens, { where: { userId: userId } }).then(data => console.log('number of rows affected : ', data)).catch(err => { console.log('err : ', err) });
-        } else {            
+        } else {
             UserTokens.create(userTokens).then(data => { console.log('User Tokens added : ', data) });
-        }        
+        }
     }
 
     static async login(req) {
         var user = await this.getUserByUserName(req.body.username);
-        if (user && user != undefined && user != null) {
+        if (user && user != undefined && user != null && user.employee.status == 'ACTIVE') {
             const checkPassword = bcrypt.compareSync(req.body.password, user.password);
             if (checkPassword) {
                 const userToBeSavedInJwt = {
                     "userId": user.id,
                     "employeeId": user.employeeId,
+                    "organizationId": user.employeeId.organizationId
                 }
                 const generatedJsonWebToken = await jsonWebToken.sign({ result: userToBeSavedInJwt }, SECRET_KEY, {
-                    expiresIn: "2min"
+                    expiresIn: EXPIRE_IN
                 })
-                const refreshToken = await this.getRefereshToken();
+                const refreshToken = await this.generateRefereshToken();
                 const userToBeReturned = {
                     "accessToken": generatedJsonWebToken,
                     "refreshToken": refreshToken,
@@ -78,14 +80,14 @@ class AuthService {
                 await this.markUserAsLoggedIn(user.id, generatedJsonWebToken, refreshToken);
                 return userToBeReturned;
             } else {
-                throw new Error("INVALID_PASSWORD");
+                throw new Error(ConstantUtils.INVALID_PASSWORD);
             }
         } else {
-            throw new Error("INVALID_LOGIN_CREDENTIAL");
+            throw new Error(ConstantUtils.INVALID_LOGIN_CREDENTIAL);
         }
     }
 
-    static async getRefereshToken() {
+    static async generateRefereshToken() {
         const refereshToken = (CommonUtils.generateGUID() + CommonUtils.generateGUID() + "-" + CommonUtils.generateGUID() + "-4" + CommonUtils.generateGUID().substr(0, 3) + "-" + CommonUtils.generateGUID() + "-" + CommonUtils.generateGUID() + CommonUtils.generateGUID() + CommonUtils.generateGUID()).toLowerCase();
         return refereshToken.toString();
     }
@@ -98,27 +100,52 @@ class AuthService {
         }
         if (refershTokenFromUI && refershTokenFromUI != undefined && refershTokenFromUI != null) {
             const updatedJwtToken = await jsonWebToken.sign({ result: userToBeSavedInJwt }, SECRET_KEY, {
-                    expiresIn: "2min"
-                });
-            const updatedRefereshToken = await this.getRefereshToken();
+                expiresIn: EXPIRE_IN
+            });
+            const updatedRefereshToken = await this.generateRefereshToken();
             const userTokensToUpdate = {
                 jwtToken: updatedJwtToken,
                 refershToken: updatedRefereshToken
             }
-            var numberOfRowsAffected = await UserTokens.update(userTokensToUpdate, { where: { userId: userToBeSavedInJwt.userId, refershToken: refershTokenFromUI } }).then(data => numberOfRowsAffected = data).catch(err => { console.log('err : ', err) });            
+            var numberOfRowsAffected = await UserTokens.update(userTokensToUpdate, { where: { userId: userToBeSavedInJwt.userId } }).then(data => numberOfRowsAffected = data).catch(err => { console.log('err : ', err) });
             if (numberOfRowsAffected > 0) {
                 return userTokensToUpdate;
             } else {
-                throw new Error("TOKEN_NOT_UPDATED");
+                throw new Error(ConstantUtils.TOKEN_NOT_UPDATED);
             }
         } else {
-            throw new Error("INVALID_REFERESH_TOKEN");
+            throw new Error(ConstantUtils.INVALID_REFERESH_TOKEN);
         }
     }
 
     static async logout(req) {
         var noOfRowsAffected = await Users.update({ isLoggedIn: false }, { where: { id: req.query.userId } }).then(data => noOfRowsAffected = data).catch(err => { console.log('err : ', err) });
         return noOfRowsAffected;
+    }
+
+    static async changePassword(req) {
+        var changePasswordReqBody = req.body;
+        var userId = req.userId;
+        if (changePasswordReqBody.newPassword == changePasswordReqBody.confirmPassword) {
+            var userFromDB = await Users.findAll({
+                where: { id: userId },
+            }).then(data => userFromDB = data[0]).catch(error => { console.log('Error in getting user by Username : ', error) });
+            const checkPassword = bcrypt.compareSync(changePasswordReqBody.currentPassword, userFromDB.password);
+            if (checkPassword) {
+                const salt = await bcrypt.genSalt(10);
+                const encryptedPassword = bcrypt.hashSync(changePasswordReqBody.newPassword, salt);
+                var userWhosePasswordIstoBeChange = {
+                    salt: salt,
+                    password: encryptedPassword,
+                }
+                var changePasswordUser = await Users.update(userWhosePasswordIstoBeChange, { where: { id: userId } }).then(data => changePasswordUser = data).catch(err => { console.log('err in upadting user details in change password : ', err) });
+                return changePasswordUser;
+            } else {
+                throw new Error(ConstantUtils.CURRENT_PASSWORD_INVALID);
+            }
+        } else {
+            throw new Error(ConstantUtils.PASSWORD_NOT_MATCHES);
+        }
     }
 }
 
