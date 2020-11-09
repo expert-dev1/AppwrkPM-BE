@@ -12,7 +12,7 @@ class ProjectService {
     static async getProjectListByOrgIdWithPage(req) {
         var limit = req.body.limit;
         var offset = req.body.offset;
-        var orgId = req.body.orgId;
+        var orgId = req.employee.organizationId;
         var sortField = req.body.sortField;
         var sortDirection = req.body.sortDirection;
         var searchString = req.body.searchString && req.body.searchString != undefined && req.body.searchString != null ? req.body.searchString : null;
@@ -99,6 +99,7 @@ class ProjectService {
 
     static async saveProjectDTO(req) {
         var projectInfo = req.body.projectInfo;
+        console.log('projectInfo : ', projectInfo);
         var loggedInEmployeeDetails = req.employee;
         var duplicateRowsCount = await Project.findAndCountAll({ where: { name: projectInfo.name, organizationId: loggedInEmployeeDetails.organizationId } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
@@ -112,14 +113,15 @@ class ProjectService {
                     endDate: projectInfo.endDate && projectInfo.endDate != '' ? projectInfo.endDate : null,
                     timeType: projectInfo.timeType,
                     amount: projectInfo.amount,
+                    inChargeId: projectInfo.inChargeId,
+                    platformTypeId: projectInfo.platformTypeId,
                     status: projectInfo.status,
                     createdBy: req.userId,
                     updatedBy: req.userId,
-                    organizationId: loggedInEmployeeDetails.organizationId,
-                    platformTypeId: projectInfo.platformTypeId
+                    organizationId: loggedInEmployeeDetails.organizationId,                    
                 }
+                console.log('projectInfoToBeSaved : ', projectInfoToBeSaved);
                 var newProject = await Project.create(projectInfoToBeSaved).then(data => newProject = data).catch(error => console.log('error in saving records : ', error));;
-                console.log('project info after save : ', newProject);
                 var clientInfo = req.body.clientInfo;
                 await this.saveClientInfo(newProject, clientInfo);
                 var employeeProjectList = req.body.employeeProjectList;
@@ -188,7 +190,6 @@ class ProjectService {
                         createdBy: project.createdBy,
                         updatedBy: project.updatedBy
                     }
-                    console.log('employeeProject single record : ', employeeProject);
                     EmployeeProject.create(employeeProject).then(data => { console.log('data to save in employee project : ', data) }).catch(err => { throw new Error(err) });
                 } else {
                     var employeeProject = {
@@ -244,6 +245,7 @@ class ProjectService {
 
     static async updateProjectDTO(req) {
         var projectInfo = req.body.projectInfo;
+        console.log('projectInfo inside update : ', projectInfo);
         var projectId = projectInfo.id;
         var loggedInEmployeeDetails = req.employee;
         var duplicateRowsCount = await Project.findAndCountAll({ where: { name: projectInfo.name, organizationId: loggedInEmployeeDetails.organizationId, id: { [Op.ne]: projectId } } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
@@ -261,9 +263,11 @@ class ProjectService {
                     status: projectInfo.status,
                     updatedBy: req.userId,
                     organizationId: loggedInEmployeeDetails.organizationId,
-                    platformTypeId: projectInfo.platformTypeId
+                    platformTypeId: projectInfo.platformTypeId,
+                    inChargeId: projectInfo.inChargeId
                 }
-                await Project.update(projectInfoToBeSaved, { where: { id: projectId } }).then(data => updatedProject = data).catch(error => console.log('error in saving records : ', error));
+                console.log('projectInfoToBeSaved inside update : ', projectInfoToBeSaved);
+                await Project.update(projectInfoToBeSaved, { where: { id: projectId } }).then(data => {console.log('Number of rows affected : ', data)}).catch(error => console.log('error in saving records : ', error));
                 var projectDetails = await Project.findByPk(projectId).then(data => projectDetails = data);
                 var clientInfo = req.body.clientInfo;
                 await this.updateClientInfo(projectDetails, clientInfo);
@@ -318,6 +322,22 @@ class ProjectService {
                 }
             }
         }
+    }
+
+    static async getProjectListByOrgIdAndLoggedInEmployeeId(req) {
+        var projectList = await EmployeeProject.findAll({
+            include: [{
+                model: Project,
+                as: 'project',
+                attributes: ['id', 'name']
+            }],
+            where: {
+                employeeId: req.employee.id,
+                organizationId: req.employee.organizationId,
+            },
+            attributes: ['project.id', 'project.name'],
+        }).then(data => projectList = data).catch(error => console.log('Error in getProjectListByOrgIdAndLoggedInEmployeeId : ', error));
+        return projectList;
     }
 }
 

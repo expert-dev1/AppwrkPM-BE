@@ -10,7 +10,7 @@ class DesignationService {
     static async getDesignationListByOrgIdWithPage(req) {
         var limit = req.body.limit;
         var offset = req.body.offset;
-        var orgId = req.body.orgId;
+        var orgId = req.employee.organizationId;
         var sortField = req.body.sortField;
         var sortDirection = req.body.sortDirection;
         var searchString = req.body.searchString && req.body.searchString != undefined && req.body.searchString != null ? req.body.searchString : null;
@@ -33,10 +33,7 @@ class DesignationService {
                 },
                 order: [
                     [sortField, sortDirection],
-                ], // conditions
-                include: [{
-                    model: Organization,
-                }]
+                ],
             }).then(data => {
                 const totalPages = Math.ceil(data.count / limit);
                 desinationList = {
@@ -56,10 +53,7 @@ class DesignationService {
                 where: { organizationId: orgId },
                 order: [
                     [sortField, sortDirection],
-                ], // conditions
-                include: [{
-                    model: Organization,
-                }]
+                ],
             }).then(data => {
                 const totalPages = Math.ceil(data.count / limit);
                 desinationList = {
@@ -81,7 +75,7 @@ class DesignationService {
         var designation = {
             name: req.body.name,
             description: req.body.description,
-            organizationId: req.body.organizationId,
+            organizationId: req.employee.organizationId,
         };
         var duplicateRowsCount = await Designation.findAndCountAll({ where: { name: designation.name, organizationId: designation.organizationId } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
         // var duplicateRowsCount = await Designation.findAndCountAll({where: { name : Sequelize.fn('lower', Sequelize.col('name'), Sequelize.fn('lower', designation.name)), organizationId: req.body.organizationId}}).then(data => console.log('data : ', data.count));
@@ -128,7 +122,7 @@ class DesignationService {
     static async getDesignationListByOrgId(req) {
         var desinationList = {};
         await Designation.findAndCountAll({
-            where: { organizationId: req.query.orgId },
+            where: { organizationId: req.employee.organizationId },
         }).then(data => {
             desinationList = data.rows
         });

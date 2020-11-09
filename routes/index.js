@@ -19,4 +19,8 @@ router.use('/projects', require('./api/project-routes'));
 
 router.use('/organization', require('./api/organization-routes'));
 
+router.use('/organizationCalendar', require('./api/organization-calendar-routes'));
+
+router.use('/timeSheet', require('./api/time-sheet-routes'));
+
 module.exports = router;

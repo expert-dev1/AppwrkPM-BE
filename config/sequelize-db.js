@@ -5,7 +5,7 @@ const {ENV,HOST,PASSWORD,PORT,USER} = require('./config');
 const sequelize = new Sequelize( 
     'project_management', 
     USER, 
-    PASSWORD, { 
+    '', { 
         // Explicitly specifying  
         // mysql database 
         dialect: 'mysql', 

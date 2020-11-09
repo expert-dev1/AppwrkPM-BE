@@ -86,7 +86,7 @@ class OrganizationService {
             var updatedOrganization = await Organization.update(organizationFromUI, { where: { id: organizationFromUI.id } }).then(numberOfRowsAffected => updatedOrganization = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
             return updatedOrganization;
         } else {
-            throw new Error(ConstantUtils.RECORD_ALREADY_EXISTS);
+            throw new Error(ConstantUtils.ORG_CODE_ALREADY_EXISTS);
         }
     }
 

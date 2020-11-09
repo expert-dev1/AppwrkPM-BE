@@ -9,7 +9,7 @@ class RoleMasterService {
     static async getRoleMasterListByOrgIdWithPage(req) {
         var limit = req.body.limit;
         var offset = req.body.offset;
-        var orgId = req.body.orgId;
+        var orgId = req.employee.organizationId;
         var sortField = req.body.sortField;
         var sortDirection = req.body.sortDirection;
         var searchString = req.body.searchString && req.body.searchString != undefined && req.body.searchString != null ? req.body.searchString : null;
@@ -73,7 +73,7 @@ class RoleMasterService {
         var roleMaster = {
             name: req.body.name,
             description: req.body.description,
-            organizationId: req.body.organizationId
+            organizationId: req.employee.organizationId
         };
         var duplicateRowsCount = await RoleMaster.findAndCountAll({ where: { name: roleMaster.name, organizationId: roleMaster.organizationId } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
@@ -112,7 +112,7 @@ class RoleMasterService {
 
     static async getRoleMasterListByOrgId(req) {
         var roleMasterList = await RoleMaster.findAndCountAll({
-            where: { organizationId: req.query.orgId },
+            where: { organizationId: req.employee.organizationId },
         }).then(data => roleMasterList = data.rows);
         return roleMasterList;
     }

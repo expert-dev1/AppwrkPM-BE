@@ -16,6 +16,6 @@ router.delete('/deleteClientMoreInfoById', ProjectController.deleteClientMoreInf
 
 router.delete('/deleteEmployeeProjectById', ProjectController.deleteEmployeeProjectById);
 
-// router.get('/getEmployeeListByOrgId', ProjectController.getEmployeeListByOrgId);
+router.get('/getProjectListByOrgIdAndLoggedInEmployeeId', ProjectController.getProjectListByOrgIdAndLoggedInEmployeeId);
 
 module.exports = router;

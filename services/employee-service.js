@@ -12,7 +12,7 @@ class EmployeeService {
     static async getEmployeeListByOrgIdWithPage(req) {
         var limit = req.body.limit;
         var offset = req.body.offset;
-        var orgId = req.body.orgId;
+        var orgId = req.employee.organizationId;
         var sortField = req.body.sortField;
         var sortDirection = req.body.sortDirection;
         var searchString = req.body.searchString && req.body.searchString != undefined && req.body.searchString != null ? req.body.searchString : null;
@@ -97,7 +97,7 @@ class EmployeeService {
 
     static async saveEmployee(req) {
         var employee = {
-            empCode: await this.getEmployeeCode(req.body.organizationId),
+            empCode: await this.getEmployeeCode(req.employee.organizationId),
             firstName: req.body.firstName,
             middleName: req.body.middleName && req.body.middleName != undefined && req.body.middleName != null ? req.body.middleName : null,
             lastName: req.body.lastName,
@@ -108,7 +108,7 @@ class EmployeeService {
             addressLine1: req.body.addressLine1,
             addressLine2: req.body.addressLine2 && req.body.addressLine2 != undefined && req.body.addressLine2 != null ? req.body.addressLine2 : null,
             roleMaster: req.body.roleMaster,
-            organizationId: req.body.organizationId,
+            organizationId: req.employee.organizationId,
             designationId: req.body.designationId,
             country: req.body.country,
             state: req.body.state,
@@ -119,7 +119,7 @@ class EmployeeService {
         var duplicateRowsCount = await Employee.findAndCountAll({ where: { emailId: employee.emailId } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
             var newEmployee = await Employee.create(employee).then(data => newEmployee = data);
-            this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, req.body.organizationId);
+            this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, newEmployee.organizationId);
             AuthService.createUserFromEmployee(newEmployee);
             return newEmployee;
         } else {
@@ -215,7 +215,7 @@ class EmployeeService {
 
     static async getEmployeeListByOrgId(req) {
         var employeeList = await Employee.findAll({
-            where: { organizationId: req.query.orgId },
+            where: { organizationId: req.employee.organizationId },
             include: [{
                 model: Designation,
                 as: 'designation',

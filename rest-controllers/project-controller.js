@@ -80,6 +80,15 @@ class ProjectController {
             RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
         });
     }
+
+    static async getProjectListByOrgIdAndLoggedInEmployeeId(req, res) {
+        ProjectService.getProjectListByOrgIdAndLoggedInEmployeeId(req).then(response => {
+            RestServiceTemplateUtils.getRecordSuccessResponse(response, res);
+        }).catch(error => {
+            const err = { "error": error }
+            RestServiceTemplateUtils.getRecordSuccessResponse(err, res);
+        });
+    }
 }
 
 module.exports = ProjectController;

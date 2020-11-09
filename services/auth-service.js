@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const CommonUtils = require("../common-utils/CommonUtils");
 const Users = require("../models/auth/Users");
 const UserTokens = require("../models/auth/UserTokens");
+const RoleEmployee = require("../models/employee/RoleEmployee");
+const RoleMaster = require("../models/role-master/RoleMaster");
 const jsonWebToken = require("jsonwebtoken");
 const { SECRET_KEY, EXPIRE_IN } = require("../config/config");
 // const Sequelize = require("sequelize");
@@ -66,16 +68,28 @@ class AuthService {
                 const userToBeSavedInJwt = {
                     "userId": user.id,
                     "employeeId": user.employeeId,
-                    "organizationId": user.employeeId.organizationId
                 }
                 const generatedJsonWebToken = await jsonWebToken.sign({ result: userToBeSavedInJwt }, SECRET_KEY, {
                     expiresIn: EXPIRE_IN
                 })
                 const refreshToken = await this.generateRefereshToken();
+                var roleList = await RoleEmployee.findAll({
+                    // include: [{
+                    //     model: RoleMaster,
+                    //     as: 'role_master',
+                    //     // attributes: ['id']
+                    // }],
+                    where: { employeeId: userToBeSavedInJwt.employeeId, organizationId: user.organizationId },
+                    attributes: ['roleMasterId'],
+                }
+                ).then(data => roleList = data).catch(error => { console.log('Error in getting user by Username : ', error) });
+                console.log('roleList : ', roleList);
                 const userToBeReturned = {
                     "accessToken": generatedJsonWebToken,
                     "refreshToken": refreshToken,
-                    "user": userToBeSavedInJwt
+                    "user": userToBeSavedInJwt,
+                    "isLoggedIn": true,
+                    "roleList": roleList
                 }
                 await this.markUserAsLoggedIn(user.id, generatedJsonWebToken, refreshToken);
                 return userToBeReturned;

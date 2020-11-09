@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const Organization = require('../organization/Organization');
+const Employee = require('../employee/Employee');
 const PlatformType = require('../seed-data/PlatformType');
 const sequelize = require("../../config/sequelize-db");
 const Project = sequelize.define('project', {
@@ -21,6 +22,12 @@ const Project = sequelize.define('project', {
     createdBy: { type: Sequelize.STRING(100), allowNull: false },
     updatedBy: { type: Sequelize.STRING(100), allowNull: false },
     updatedAt: Sequelize.DATE,
+});
+
+Project.belongsTo(Employee, {
+    allowNull: false,
+    as: 'inCharge',
+    onDelete: 'restrict'
 });
 
 Project.belongsTo(Organization, {

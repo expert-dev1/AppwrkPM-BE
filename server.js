@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const PORT = 3000;
-// const Client = require('./models/client/Client');
+const EmployeeTimeSheet = require('./models/time-sheet/EmployeeTimeSheet');
 
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
@@ -17,7 +17,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 console.log(`Your port is ${process.env.PORT}`);
 
-// Client.sync();
+// EmployeeTimeSheet.sync();
 sequelize.sync().then(result => {
     // console.log(result);
     app.listen(PORT, function() {
