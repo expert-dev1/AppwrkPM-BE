@@ -29,6 +29,7 @@ class OrganizationCalendarService {
 
     static async updateOrganizationEvents(req) {
         var organizationEventsId = req.body.id;
+        console.log('Req Body : ', req.body);
         var organizationCalender = {
             eventFor: req.body.eventFor,
             celebrationFor: req.body.celebrationFor,
@@ -39,6 +40,7 @@ class OrganizationCalendarService {
             venueOfEvent: req.body.venueOfEvent,
         };
         var duplicateRowsCount = await OrganizationCalender.findAndCountAll({ where: { eventFor: organizationCalender.eventFor, celebrationFor: organizationCalender.celebrationFor, organizationId: req.employee.organizationId, id: { [Op.ne]: organizationEventsId } } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
+        console.log('Duplicate Rows Count : ', duplicateRowsCount);
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
             var updatedOrganizationCalender = await OrganizationCalender.update(organizationCalender, { where: { id: organizationEventsId } })
                 .then(numberOfRowsAffected => updatedOrganizationCalender = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
@@ -58,22 +60,15 @@ class OrganizationCalendarService {
             where: { organizationId: req.employee.organizationId },
         }).then(data => organizationCalenderList = data);
         return organizationCalenderList;
-        //     var organizationCalenderList = [];
-        //     await OrganizationCalender.findAndCountAll({
-        //         where: { organizationId: req.employee.organizationId },
-        //         group: ['dateOfEvent'],
-        //         attributes: ['dateOfEvent', 'eventFor'],
-        //     }).then(data => {const list = {
-        //         dateOfEvent: data.row,
-        //         count: data.count
-        //     }
-        //     organizationCalenderList = list;
-        // });
-        // return organizationCalenderList;
     }
 
     static async deleteOrganizationEventsById(req) {
-
+        var organizationCalender = await OrganizationCalender.destroy({
+            where: {
+                id: req.query.orgCalId
+            }
+        }).then(data => organizationCalender = data).catch(err => { throw new Error(err) });
+        return organizationCalender;
     }
 }
 
