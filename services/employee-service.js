@@ -161,7 +161,10 @@ class EmployeeService {
     }
 
     static async checkEmailIdOfEmployee(req) {
-        var duplicateRowsCount = await Employee.findAndCountAll({ where: { emailId: req.query.emailId } }).then(data => duplicateRowsCount = data.count);
+        var duplicateRowsCount = await Employee.findAndCountAll({ where: { emailId: req.query.emailId } }).then(data => duplicateRowsCount = data.count).catch(error => {
+            console.log('Error inside dupliocate email : ', error);
+        });
+        console.log('duplicateRowsCount : ', duplicateRowsCount);
         if (duplicateRowsCount != null && duplicateRowsCount != 0) {
             return false;
         } else {
