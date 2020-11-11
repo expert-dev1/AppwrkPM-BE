@@ -11,6 +11,8 @@ router.use('/roleMaster', require('./api/role-master-routes'));
 
 router.use('/employee', require('./api/employee-routes'));
 
+router.use('/employeeAttendance', require('./api/employee-attendance-routes'));
+
 router.use('/skillMaster', require('./api/skill-master-routes'));
 
 router.use('/seedData', require('./api/seed-data-routes'));

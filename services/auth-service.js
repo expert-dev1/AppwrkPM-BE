@@ -3,7 +3,7 @@ const CommonUtils = require("../common-utils/CommonUtils");
 const Users = require("../models/auth/Users");
 const UserTokens = require("../models/auth/UserTokens");
 const RoleEmployee = require("../models/employee/RoleEmployee");
-const RoleMaster = require("../models/role-master/RoleMaster");
+const EmployeeAttendance = require("../models/employee-attendance/EmployeeAttendance");
 const jsonWebToken = require("jsonwebtoken");
 const { SECRET_KEY, EXPIRE_IN } = require("../config/config");
 // const Sequelize = require("sequelize");
@@ -83,13 +83,15 @@ class AuthService {
                     attributes: ['roleMasterId'],
                 }
                 ).then(data => roleList = data).catch(error => { console.log('Error in getting user by Username : ', error) });
-                console.log('roleList : ', roleList);
+                console.log('roleList : ', roleList);                
+                // var attendanceId = await this.markEmployeeAttendance(user.employeeId, user.organizationId);
                 const userToBeReturned = {
                     "accessToken": generatedJsonWebToken,
                     "refreshToken": refreshToken,
                     "user": userToBeSavedInJwt,
                     "isLoggedIn": true,
-                    "roleList": roleList
+                    "roleList": roleList,
+                    // "attendanceId": attendanceId
                 }
                 await this.markUserAsLoggedIn(user.id, generatedJsonWebToken, refreshToken);
                 return userToBeReturned;
@@ -100,6 +102,24 @@ class AuthService {
             throw new Error(ConstantUtils.INVALID_LOGIN_CREDENTIAL);
         }
     }
+    
+    static async markEmployeeAttendance(employeeId, organizationId) {
+        var employeeAttendance = {
+            checkIn: new Date(),
+            employeeId: employeeId,
+            organizationId: organizationId	
+        }
+        console.log('employeeAttendance : ', employeeAttendance);
+        var checkIfAttendanceAlreadyCounted = await EmployeeAttendance.findAndCountAll({ where: { checkIn: employeeAttendance.checkIn, organizationId: employeeAttendance.organizationId, employeeId: employeeAttendance.employeeId } }).then(data => checkIfAttendanceAlreadyCounted = data.count).catch(error => console.log('error in checking duplicate records : ', error));
+        console.log('checkIfAttendanceAlreadyCounted : ', checkIfAttendanceAlreadyCounted);
+        if (checkIfAttendanceAlreadyCounted != null && checkIfAttendanceAlreadyCounted == 0) {
+            var attendanceId = await EmployeeAttendance.create(employeeAttendance).then(data => attendanceId = data.id).catch(error => {console.log('Error in marking attendance of the logged in employee : ', error)})
+            return attendanceId;
+        } else {
+            return 0;
+        }        
+    }
+
 
     static async generateRefereshToken() {
         const refereshToken = (CommonUtils.generateGUID() + CommonUtils.generateGUID() + "-" + CommonUtils.generateGUID() + "-4" + CommonUtils.generateGUID().substr(0, 3) + "-" + CommonUtils.generateGUID() + "-" + CommonUtils.generateGUID() + CommonUtils.generateGUID() + CommonUtils.generateGUID()).toLowerCase();
