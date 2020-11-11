@@ -2,7 +2,7 @@ var HttpStatus = require('http-status-codes');
 class RestServiceTemplateUtils {
 
     static async createdSuccessResponse(data, res) {
-        if (data && data != undefined && data != null && data) {
+        if (data != undefined && data != null) {
             if (data.error) {
                 console.log('Error in saving record : ', data.error);
                 this.response(HttpStatus.INTERNAL_SERVER_ERROR, false, data.error.message, data, res);
@@ -35,7 +35,7 @@ class RestServiceTemplateUtils {
     }
 
     static async getRecordSuccessResponse(data, res) {
-        if (data && data != undefined && data != null && data) {
+        if (data != undefined && data != null) {
             if (data.error) {
                 console.log('Error in fetching record : ', data.error);
                 this.response(HttpStatus.INTERNAL_SERVER_ERROR, false, data.error.message, data, res);
