@@ -111,7 +111,8 @@ class EmployeeService {
             organizationId: req.employee.organizationId,
             designationId: req.body.designationId,
             isDeleted: false,
-            ...address
+            ...address,
+            imagePath: req.file && req.file.path || ''
         };
         var duplicateRowsCount = await Employee.findAndCountAll({ where: { emailId: employee.emailId } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
