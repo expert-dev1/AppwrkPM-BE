@@ -117,7 +117,7 @@ class EmployeeService {
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
             var newEmployee = await Employee.create(employee).then(data => newEmployee = data);
             this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, newEmployee.organizationId);
-            this.mapSkillsToEmployee(newEmployee.id, req.body.skillMasterIds);
+            this.mapSkillsToEmployee(newEmployee.id, req.body.skillMasterIds, newEmployee.organizationId);
             AuthService.createUserFromEmployee(newEmployee);
             return newEmployee;
         } else {
@@ -259,13 +259,14 @@ class EmployeeService {
         return address;
     }
 
-    static async mapSkillsToEmployee(employeeId, skillsMasterIds) {
+    static async mapSkillsToEmployee(employeeId, skillsMasterIds, orgId) {
         var countIfEmployeeIsNewCreatedOrNot = await SkillEmployee.findAndCountAll({
             where: {employeeId: employeeId },
         }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
         if (skillsMasterIds && skillsMasterIds != undefined && skillsMasterIds != null && skillsMasterIds.length != 0) {
             for (var i = 0; i < skillsMasterIds.length; i++) {
                 var skillmployee = {
+                    organizationId: orgId,
                     employeeId: employeeId,
                     roleMasterId: skillsMasterIds[i]
                 }
@@ -274,7 +275,7 @@ class EmployeeService {
                 } else {
                     await SkillEmployee.destroy({
                         where: {
-                           employeeId: employeeId
+                            organizationId: orgId, employeeId: employeeId
                         }
                     }).then(data => console.log('number of skill employee deleted : ', data)).catch(err => { throw new Error(err) });
                     SkillEmployee.create(skillmployee).then(data => { console.log('data to save in skill employee : ', data) });
