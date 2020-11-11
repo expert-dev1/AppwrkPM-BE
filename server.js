@@ -9,6 +9,9 @@ app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/api', require('./routes/index'));
+app.get('/', function (req, res) {
+    res.send('Hello World');
+})
 
 const sequelize = require('./config/sequelize-db');
   

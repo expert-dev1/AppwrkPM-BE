@@ -147,9 +147,11 @@ class EmployeeService {
     static async getEmployeeDetailsId(req) {
         var employee = await Employee.findByPk(req.query.employeeId).then(data => employee = data);
         var roleEmployeeList = await RoleEmployee.findAll({ where: { employeeId: req.query.employeeId } }).then(data => roleEmployeeList = data);
+        var skillEmployeeList = await SkillEmployee.findAll({ where: { employeeId: req.query.employeeId } }).then(data => skillEmployeeList = data);
         var employeeAndRoleRmployee = {
             employee: employee,
-            roleEmployeeList: roleEmployeeList
+            roleEmployeeList: roleEmployeeList,
+            skillEmployeeList: skillEmployeeList
         };
         return employeeAndRoleRmployee;
     }
