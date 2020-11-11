@@ -136,7 +136,7 @@ class EmployeeService {
             dateOfJoining: req.body.dateOfJoining,
             addressLine1: req.body.addressLine1,
             addressLine2: req.body.addressLine2,
-            organizationId: req.body.organizationId,
+            organizationId: req.employee.organizationId,
             designationId: req.body.designationId,
             country: req.body.country,
             status: req.body.status,
@@ -146,7 +146,7 @@ class EmployeeService {
             updatedAt: new Date()
         };
         var updatedEmployee = await Employee.update(employee, { where: { id: employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
-        this.mapRolesToEmployee(employeeId, req.body.roleMasterId, req.body.organizationId);
+        this.mapRolesToEmployee(employeeId, req.body.roleMasterId, req.employee.organizationId);
         return updatedEmployee;
     }
 
