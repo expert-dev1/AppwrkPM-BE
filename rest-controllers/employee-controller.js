@@ -12,6 +12,7 @@ class EmployeeController {
     }
 
     static async saveEmployee(req, res) {
+        console.log(req.file);
         EmployeeService.saveEmployee(req).then(response => { 
             RestServiceTemplateUtils.createdSuccessResponse(response, res);
         }).catch(error => {

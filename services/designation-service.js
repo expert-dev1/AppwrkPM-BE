@@ -91,7 +91,6 @@ class DesignationService {
         var designation = {
             name: req.body.name,
             description: req.body.description,
-            organizationId: req.body.organizationId,
             updatedAt: new Date()
         };
         // var duplicateRowsCount = await Designation.findAndCountAll({ where: { name: Sequelize.fn('lower', Sequelize.col(designation.name)), organizationId: req.body.organizationId } }).then(data => duplicateRowsCount = data.count);
