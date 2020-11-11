@@ -13,9 +13,9 @@ const upload = multer({storage: storage});
 
 router.post('/getEmployeeListByOrgIdWithPage', EmployeeController.getEmployeeListByOrgIdWithPage);
 
-router.post('/', upload.single('photo'), EmployeeController.saveEmployee);
+router.post('/', upload.single('imagePath'), EmployeeController.saveEmployee);
 
-router.put('/', EmployeeController.updateEmployee);
+router.put('/', upload.single('imagePath'),EmployeeController.updateEmployee);
 
 router.get('/', EmployeeController.getEmployeeDetailsId);
 
