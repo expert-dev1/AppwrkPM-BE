@@ -2,6 +2,7 @@
 var Employee = require('../models/employee/Employee');
 const Designation = require('../models/designation/Designation');
 const RoleEmployee = require('../models/employee/RoleEmployee');
+const SkillEmployee = require('../models/employee/SkillEmployee');
 const AuthService = require('../services/auth-service');
 const ConstantUtils = require("../common-utils/ConstantUtils");
 const { Sequelize, Op } = require('sequelize');
@@ -96,6 +97,7 @@ class EmployeeService {
     }
 
     static async saveEmployee(req) {
+       var address = this.mapAddress(req);
         var employee = {
             empCode: await this.getEmployeeCode(req.employee.organizationId),
             firstName: req.body.firstName,
@@ -105,21 +107,17 @@ class EmployeeService {
             dateOfJoining: req.body.dateOfJoining,
             mobileNumber: req.body.mobileNumber,
             emailId: req.body.emailId,
-            addressLine1: req.body.addressLine1,
-            addressLine2: req.body.addressLine2 && req.body.addressLine2 != undefined && req.body.addressLine2 != null ? req.body.addressLine2 : null,
             roleMaster: req.body.roleMaster,
             organizationId: req.employee.organizationId,
             designationId: req.body.designationId,
-            country: req.body.country,
-            state: req.body.state,
-            city: req.body.city,
-            pincode: req.body.pincode,
-            isDeleted: false
+            isDeleted: false,
+            ...address
         };
         var duplicateRowsCount = await Employee.findAndCountAll({ where: { emailId: employee.emailId } }).then(data => duplicateRowsCount = data.count).catch(error => console.log('error in checking duplicate records : ', error));
         if (duplicateRowsCount != null && duplicateRowsCount == 0) {
             var newEmployee = await Employee.create(employee).then(data => newEmployee = data);
             this.mapRolesToEmployee(newEmployee.id, req.body.roleMasterId, newEmployee.organizationId);
+            this.mapSkillsToEmployee(newEmployee.id, req.body.skillMasterIds);
             AuthService.createUserFromEmployee(newEmployee);
             return newEmployee;
         } else {
@@ -129,24 +127,20 @@ class EmployeeService {
 
     static async updateEmployee(req) {
         var employeeId = req.body.id;
+        var address = this.mapAddress(req);
         var employee = {
             firstName: req.body.firstName,
             middleName: req.body.middleName && req.body.middleName != undefined && req.body.middleName != null && req.body.middleName != "" ? req.body.middleName : null,
             lastName: req.body.lastName,
             dateOfJoining: req.body.dateOfJoining,
-            addressLine1: req.body.addressLine1,
-            addressLine2: req.body.addressLine2,
             organizationId: req.employee.organizationId,
             designationId: req.body.designationId,
-            country: req.body.country,
-            status: req.body.status,
-            state: req.body.state,
-            city: req.body.city,
-            pincode: req.body.pincode,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            ...address
         };
         var updatedEmployee = await Employee.update(employee, { where: { id: employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
         this.mapRolesToEmployee(employeeId, req.body.roleMasterId, req.employee.organizationId);
+        this.mapSkillsToEmployee(employeeId, req.body.skillMasterIds);
         return updatedEmployee;
     }
 
@@ -233,6 +227,61 @@ class EmployeeService {
         var updatedEmployee = await Employee.update({isDeleted: true}, { where: { id: req.query.employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
         return updatedEmployee;
     }
+
+    static mapAddress(req){
+        var address= {
+            permanentAddressLine1: req.body.permanentAddressLine1,
+            permanentAddressLine2: req.body.permanentAddressLine2 && req.body.permanentAddressLine2 != undefined && req.body.permanentAddressLine2 != null ? req.body.permanentAddressLine2 : null,
+            permanentCountry: req.body.permanentCountry,
+            permanentState: req.body.permanentState,
+            permanentCity: req.body.permanentCity,
+            permanentPincode: req.body.permanentPincode,
+            currentAddressLine1: req.body.currentAddressLine1,
+            currentAddressLine2: req.body.currentAddressLine2 && req.body.currentAddressLine2 != undefined && req.body.currentAddressLine2 != null ? req.body.currentAddressLine2 : null,
+            currentCountry: req.body.currentCountry,
+            currentState: req.body.currentState,
+            currentCity: req.body.currentCity,
+            currentPincode: req.body.currentPincode
+        };
+        if(req.body.sameAsPermanentAddress){
+            address = {
+                ...address,
+                currentAddressLine1: req.body.permanentAddressLine1,
+                currentAddressLine2: req.body.permanentAddressLine2 && req.body.permanentAddressLine2 != undefined && req.body.permanentAddressLine2 != null ? req.body.permanentAddressLine2 : null,
+                currentCountry: req.body.permanentCountry,
+                currentState: req.body.permanentState,
+                currentCity: req.body.permanentCity,
+                currentPincode: req.body.permanentPincode
+            }
+        }
+        return address;
+    }
+
+    static async mapSkillsToEmployee(employeeId, skillsMasterIds) {
+        var countIfEmployeeIsNewCreatedOrNot = await SkillEmployee.findAndCountAll({
+            where: {employeeId: employeeId },
+        }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
+        if (skillsMasterIds && skillsMasterIds != undefined && skillsMasterIds != null && skillsMasterIds.length != 0) {
+            for (var i = 0; i < skillsMasterIds.length; i++) {
+                var skillmployee = {
+                    employeeId: employeeId,
+                    roleMasterId: skillsMasterIds[i]
+                }
+                if (countIfEmployeeIsNewCreatedOrNot == 0) {
+                    SkillEmployee.create(skillmployee).then(data => { console.log('data to save in skill employee : ', data) });
+                } else {
+                    await SkillEmployee.destroy({
+                        where: {
+                           employeeId: employeeId
+                        }
+                    }).then(data => console.log('number of skill employee deleted : ', data)).catch(err => { throw new Error(err) });
+                    SkillEmployee.create(skillmployee).then(data => { console.log('data to save in skill employee : ', data) });
+                }
+            }
+        }
+    }
+
+
 }
 
 module.exports = EmployeeService;

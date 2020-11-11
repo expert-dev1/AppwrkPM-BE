@@ -24,10 +24,10 @@ const Employee = sequelize.define('employee', {
     mobileNumber: { type: Sequelize.STRING(10), allowNull: false },
     status: { type: Sequelize.STRING(50), allowNull: false },
     dateOfJoining: { type: Sequelize.DATE, allowNull: false },
-    addressLine1: { type: Sequelize.STRING(200), allowNull: false },
-    addressLine2: { type: Sequelize.STRING(200) },
     isDeleted: { type: Sequelize.BOOLEAN, allowNull: false},
-    country: {
+    currentAddressLine1: { type: Sequelize.STRING(200), allowNull: false },
+    currentAddressLine2: { type: Sequelize.STRING(200) },
+    currentCountry: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -35,7 +35,7 @@ const Employee = sequelize.define('employee', {
             key: 'id'
         }
     },
-    state: {
+    currentState: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -43,7 +43,7 @@ const Employee = sequelize.define('employee', {
             key: 'id'
         }
     },
-    city: {
+    currentCity: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -51,7 +51,34 @@ const Employee = sequelize.define('employee', {
             key: 'id'
         }
     },
-    pincode: { type: Sequelize.INTEGER(6), allowNull: false },
+    currentPincode: { type: Sequelize.INTEGER(6), allowNull: false },
+    permanentAddressLine1: { type: Sequelize.STRING(200), allowNull: false },
+    permanentAddressLine2: { type: Sequelize.STRING(200) },
+    permanentCountry: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: Country,
+            key: 'id'
+        }
+    },
+    permanentState: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: State,
+            key: 'id'
+        }
+    },
+    permanentCity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: City,
+            key: 'id'
+        }
+    },
+    permanentPincode: { type: Sequelize.INTEGER(6), allowNull: false },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
     fullName: {
