@@ -52,6 +52,7 @@ const Employee = sequelize.define('employee', {
         }
     },
     currentPincode: { type: Sequelize.INTEGER(6), allowNull: false },
+    sameAsPermanentAddress: { type: Sequelize.BOOLEAN, allowNull: false},
     permanentAddressLine1: { type: Sequelize.STRING(200), allowNull: false },
     permanentAddressLine2: { type: Sequelize.STRING(200) },
     permanentCountry: {

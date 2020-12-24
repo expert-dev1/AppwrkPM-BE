@@ -97,7 +97,7 @@ class EmployeeService {
     }
 
     static async saveEmployee(req) {
-       var address = this.mapAddress(req);
+        var address = this.mapAddress(req);
         var employee = {
             empCode: await this.getEmployeeCode(req.employee.organizationId),
             firstName: req.body.firstName,
@@ -127,6 +127,7 @@ class EmployeeService {
     }
 
     static async updateEmployee(req) {
+        console.log('Request file : ', req.imagePath);
         var employeeId = req.body.id;
         var address = this.mapAddress(req);
         var employee = {
@@ -137,11 +138,12 @@ class EmployeeService {
             organizationId: req.employee.organizationId,
             designationId: req.body.designationId,
             updatedAt: new Date(),
-            ...address
+            ...address,
+            imagePath: req.file && req.file.path || ''
         };
         var updatedEmployee = await Employee.update(employee, { where: { id: employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
         this.mapRolesToEmployee(employeeId, req.body.roleMasterId, req.employee.organizationId);
-        this.mapSkillsToEmployee(employeeId, req.body.skillMasterIds);
+        this.mapSkillsToEmployee(employeeId, req.body.skillMasterIds, req.employee.organizationId);
         return updatedEmployee;
     }
 
@@ -165,7 +167,7 @@ class EmployeeService {
         if (duplicateRowsCount != null && duplicateRowsCount != 0) {
             return false;
         } else {
-            return true; 
+            return true;
         }
     }
 
@@ -189,28 +191,32 @@ class EmployeeService {
     }
 
     static async mapRolesToEmployee(employeeId, roleMasterIds, orgId) {
-        var countIfEmployeeIsNewCreatedOrNot = await RoleEmployee.findAndCountAll({
-            where: { organizationId: orgId, employeeId: employeeId },
-        }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
-        if (roleMasterIds && roleMasterIds != undefined && roleMasterIds != null && roleMasterIds.length != 0) {
-            for (var i = 0; i < roleMasterIds.length; i++) {
-                var roleEmployee = {
-                    organizationId: orgId,
-                    employeeId: employeeId,
-                    roleMasterId: roleMasterIds[i]
-                }
-                if (countIfEmployeeIsNewCreatedOrNot == 0) {
-                    RoleEmployee.create(roleEmployee).then(data => { console.log('data to save in role employee : ', data) });
-                } else {
+        if (roleMasterIds && roleMasterIds != undefined && roleMasterIds != null) {
+            var countIfEmployeeIsNewCreatedOrNot = await RoleEmployee.findAndCountAll({
+                where: { organizationId: orgId, employeeId: employeeId },
+            }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
+            var roleMasterIdsList = roleMasterIds.split(",");
+            if (roleMasterIdsList && roleMasterIdsList.length > 0) {
+                if (countIfEmployeeIsNewCreatedOrNot > 0) {
                     await RoleEmployee.destroy({
                         where: {
                             organizationId: orgId, employeeId: employeeId
                         }
                     }).then(data => console.log('number of role employee deleted : ', data)).catch(err => { throw new Error(err) });
-                    RoleEmployee.create(roleEmployee).then(data => { console.log('data to save in role employee : ', data) });
+                }
+                if (roleMasterIdsList && roleMasterIdsList != undefined && roleMasterIdsList != null && roleMasterIdsList.length != 0) {
+                    for (var i = 0; i < roleMasterIdsList.length; i++) {
+                        var roleEmployee = {
+                            organizationId: orgId,
+                            employeeId: employeeId,
+                            roleMasterId: roleMasterIdsList[i]
+                        }
+                        RoleEmployee.create(roleEmployee).then(data => { console.log('data to save in role employee : ', data) });
+                    }
                 }
             }
         }
+
     }
 
     static async getEmployeeListByOrgId(req) {
@@ -227,12 +233,12 @@ class EmployeeService {
     }
 
     static async changeStatusOfEmployee(req) {
-        var updatedEmployee = await Employee.update({isDeleted: true}, { where: { id: req.query.employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
+        var updatedEmployee = await Employee.update({ isDeleted: true }, { where: { id: req.query.employeeId } }).then(numberOfRowsAffected => updatedEmployee = numberOfRowsAffected).catch(err => { console.log('err : ', err) });
         return updatedEmployee;
     }
 
-    static mapAddress(req){
-        var address= {
+    static mapAddress(req) {
+        var address = {
             permanentAddressLine1: req.body.permanentAddressLine1,
             permanentAddressLine2: req.body.permanentAddressLine2 && req.body.permanentAddressLine2 != undefined && req.body.permanentAddressLine2 != null ? req.body.permanentAddressLine2 : null,
             permanentCountry: req.body.permanentCountry,
@@ -246,7 +252,7 @@ class EmployeeService {
             currentCity: req.body.currentCity,
             currentPincode: req.body.currentPincode
         };
-        if(req.body.sameAsPermanentAddress){
+        if (req.body.sameAsPermanentAddress) {
             address = {
                 ...address,
                 currentAddressLine1: req.body.permanentAddressLine1,
@@ -261,25 +267,29 @@ class EmployeeService {
     }
 
     static async mapSkillsToEmployee(employeeId, skillsMasterIds, orgId) {
-        var countIfEmployeeIsNewCreatedOrNot = await SkillEmployee.findAndCountAll({
-            where: {employeeId: employeeId },
-        }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
-        if (skillsMasterIds && skillsMasterIds != undefined && skillsMasterIds != null && skillsMasterIds.length != 0) {
-            for (var i = 0; i < skillsMasterIds.length; i++) {
-                var skillmployee = {
-                    organizationId: orgId,
-                    employeeId: employeeId,
-                    roleMasterId: skillsMasterIds[i]
-                }
-                if (countIfEmployeeIsNewCreatedOrNot == 0) {
-                    SkillEmployee.create(skillmployee).then(data => { console.log('data to save in skill employee : ', data) });
-                } else {
+        if (skillsMasterIds && skillsMasterIds != undefined && skillsMasterIds != null) {
+            var countIfEmployeeIsNewCreatedOrNot = await SkillEmployee.findAndCountAll({
+                where: { employeeId: employeeId },
+            }).then(data => countIfEmployeeIsNewCreatedOrNot = data.count);
+            var skillMasterIdsList = skillsMasterIds.split(",");
+            if (skillMasterIdsList && skillMasterIdsList.length > 0) {
+                if (countIfEmployeeIsNewCreatedOrNot > 0) {
                     await SkillEmployee.destroy({
                         where: {
                             organizationId: orgId, employeeId: employeeId
                         }
                     }).then(data => console.log('number of skill employee deleted : ', data)).catch(err => { throw new Error(err) });
-                    SkillEmployee.create(skillmployee).then(data => { console.log('data to save in skill employee : ', data) });
+                }
+                if (skillMasterIdsList && skillMasterIdsList != undefined && skillMasterIdsList != null && skillMasterIdsList.length != 0) {
+                    for (var i = 0; i < skillMasterIdsList.length; i++) {
+                        console.log('SkillsIds : ', skillMasterIdsList[i]);
+                        var skillEmployee = {
+                            organizationId: orgId,
+                            employeeId: employeeId,
+                            skillMasterId: skillMasterIdsList[i]
+                        }
+                        SkillEmployee.create(skillEmployee).then(data => { console.log('data to save in skill employee : ', data) });
+                    }
                 }
             }
         }

@@ -57,6 +57,8 @@ class EmployeeAttendanceService {
                     "currentPageNumber": offset,
                     "currentPageSize": data.length,
                 }
+            }).catch(error => {
+                console.log('Error in getting Employee Attendance List : ', error);
             });
             return employeeAttendanceList;
         } else {
@@ -85,7 +87,9 @@ class EmployeeAttendanceService {
                     "currentPageNumber": offset,
                     "currentPageSize": data.length,
                 }
-            });
+            }).catch(error => {
+                console.log('Error in getting Employee Attendance List : ', error);
+            });;
             return employeeAttendanceList;
         }
 
